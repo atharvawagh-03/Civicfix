@@ -20,6 +20,9 @@ export default function CitizenDashboard() {
   const progress = issues.filter((i) => i.status === 'in_progress').length;
   const resolved = issues.filter((i) => i.status === 'resolved').length;
   const recent = [...issues].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 5);
+  const resolutionRate = total ? Math.round((resolved / total) * 100) : 0;
+  const focusArea =
+    pending >= progress && pending >= resolved ? 'Backlog clear-up' : progress >= resolved ? 'Active operations' : 'Final verification';
 
   return (
     <Layout>
@@ -79,22 +82,53 @@ export default function CitizenDashboard() {
             <StatCard label="Resolved" value={resolved} accent="var(--success)" />
           </section>
 
-          {/* Recent list */}
-          <section>
-            <h2 style={{ fontSize: '1.1rem', marginBottom: 12 }}>Recent issues</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {recent.length === 0 && <p style={{ color: 'var(--muted)' }}>No issues yet. Report one to get started.</p>}
-              {recent.map((i) => (
-                <Link key={i.issueId} to={`/issue/${i.issueId}`} className="list-item">
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <span style={{ fontWeight: 800, color: 'var(--text)' }}>{i.title}</span>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
-                      Updated {new Date(i.updatedAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <StatusBadge status={i.status} />
-                </Link>
-              ))}
+          <section className="dashboard-grid">
+            <div className="card card-pad">
+              <h2 style={{ fontSize: '1.1rem', marginTop: 0, marginBottom: 12 }}>Recent issues</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {recent.length === 0 && <p style={{ color: 'var(--muted)' }}>No issues yet. Report one to get started.</p>}
+                {recent.map((i) => (
+                  <Link key={i.issueId} to={`/issue/${i.issueId}`} className="list-item">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <span style={{ fontWeight: 800, color: 'var(--text)' }}>{i.title}</span>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
+                        Updated {new Date(i.updatedAt).toLocaleString()}
+                      </span>
+                    </div>
+                    <StatusBadge status={i.status} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="insight-list">
+              <div className="card card-pad">
+                <h3 style={{ margin: 0, fontSize: '1rem' }}>Impact score</h3>
+                <p style={{ margin: '6px 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+                  Resolution efficiency based on your reported issues.
+                </p>
+                <div style={{ marginTop: 10, fontSize: '1.6rem', fontWeight: 900, color: 'var(--success)' }}>
+                  {resolutionRate}%
+                </div>
+                <div className="progress-track">
+                  <span style={{ width: `${resolutionRate}%` }} />
+                </div>
+              </div>
+
+              <div className="insight-item">
+                <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.11em' }}>
+                  Current focus
+                </div>
+                <div style={{ marginTop: 4, fontWeight: 800 }}>{focusArea}</div>
+              </div>
+              <div className="insight-item">
+                <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.11em' }}>
+                  Suggested action
+                </div>
+                <div style={{ marginTop: 4, fontWeight: 700 }}>
+                  {pending > 0 ? 'Add photos and exact map pin for pending issues.' : 'Great work! Keep reporting local improvements.'}
+                </div>
+              </div>
             </div>
           </section>
         </>

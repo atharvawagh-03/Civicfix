@@ -1,15 +1,15 @@
 :root {
-  --bg: #070b14;
-  --bg2: #0b1220;
-  --surface: rgba(16, 25, 40, 0.82);
-  --surface2: rgba(25, 40, 64, 0.92);
-  --surface3: rgba(30, 50, 85, 0.35);
-  --text: #eaf2ff;
-  --muted: rgba(234, 242, 255, 0.68);
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
+  --bg: #081311;
+  --bg2: #0e1c1a;
+  --surface: rgba(14, 35, 32, 0.82);
+  --surface2: rgba(21, 52, 47, 0.92);
+  --surface3: rgba(26, 64, 58, 0.35);
+  --text: #eafff7;
+  --muted: rgba(214, 246, 236, 0.68);
+  --accent: #0ea5a4;
+  --accent-hover: #0b8b8a;
   --success: #22c55e;
-  --warning: #fbbf24;
+  --warning: #f59e0b;
   --danger: #ef4444;
   --radius: 14px;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
@@ -46,9 +46,9 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(900px 600px at 18% 10%, rgba(59, 130, 246, 0.22), transparent 55%),
-    radial-gradient(700px 450px at 85% 18%, rgba(34, 197, 94, 0.14), transparent 60%),
-    radial-gradient(650px 420px at 55% 85%, rgba(251, 191, 36, 0.11), transparent 60%),
+    radial-gradient(900px 600px at 18% 10%, rgba(14, 165, 164, 0.26), transparent 55%),
+    radial-gradient(700px 450px at 85% 18%, rgba(34, 197, 94, 0.16), transparent 60%),
+    radial-gradient(650px 420px at 55% 85%, rgba(245, 158, 11, 0.14), transparent 60%),
     linear-gradient(180deg, var(--bg2), var(--bg));
   z-index: -2;
 }
@@ -101,9 +101,9 @@ select {
 
 .card-hero {
   background:
-    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.35), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(14, 165, 164, 0.35), transparent 55%),
     radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.22), transparent 60%),
-    linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(8, 47, 73, 0.96));
+    linear-gradient(135deg, rgba(10, 22, 20, 0.98), rgba(9, 45, 41, 0.96));
   border-color: rgba(148, 163, 184, 0.45);
   box-shadow: 0 26px 60px rgba(15, 23, 42, 0.85);
 }
@@ -156,13 +156,13 @@ select {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
-  border-color: rgba(59, 130, 246, 0.55);
-  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.25);
+  background: linear-gradient(180deg, rgba(14, 165, 164, 0.95), rgba(13, 148, 136, 0.95));
+  border-color: rgba(20, 184, 166, 0.55);
+  box-shadow: 0 10px 30px rgba(13, 148, 136, 0.3);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, rgba(37, 99, 235, 0.98), rgba(29, 78, 216, 0.98));
+  background: linear-gradient(180deg, rgba(13, 148, 136, 0.98), rgba(15, 118, 110, 0.98));
 }
 
 .btn-secondary {
@@ -390,7 +390,7 @@ select {
 }
 
 .form-control:focus {
-  border-color: rgba(59, 130, 246, 0.55);
+  border-color: rgba(20, 184, 166, 0.65);
   box-shadow: 0 0 0 4px var(--ring);
 }
 
@@ -437,7 +437,7 @@ select {
 
 .list-item:hover {
   transform: translateY(-1px);
-  border-color: rgba(59, 130, 246, 0.38);
+  border-color: rgba(20, 184, 166, 0.45);
   background: rgba(16, 25, 40, 0.8);
 }
 
@@ -521,8 +521,8 @@ select {
 
 .nav-link-active {
   color: var(--text);
-  background: rgba(37, 99, 235, 0.14);
-  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(20, 184, 166, 0.16);
+  border-color: rgba(20, 184, 166, 0.4);
 }
 
 .main-area {
@@ -549,9 +549,44 @@ select {
 }
 
 .status-badge[data-status='in_progress'] {
-  color: #bfdbfe;
-  background: rgba(59, 130, 246, 0.16);
-  border-color: rgba(59, 130, 246, 0.35);
+  color: #99f6e4;
+  background: rgba(20, 184, 166, 0.16);
+  border-color: rgba(20, 184, 166, 0.35);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight-item {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(11, 30, 27, 0.6);
+}
+
+.progress-track {
+  margin-top: 10px;
+  height: 9px;
+  width: 100%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.progress-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #14b8a6);
 }
 
 .status-badge[data-status='resolved'] {
@@ -592,6 +627,10 @@ select {
   }
 
   .landing-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid {
     grid-template-columns: 1fr;
   }
 }
