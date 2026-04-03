@@ -14,6 +14,16 @@ Public issue reporting and resolution platform: citizens report civic issues wit
 
 ## Setup
 
+### One-command dev (recommended)
+
+From the repo root:
+
+```bash
+npm install
+npm run install:all
+npm run dev
+```
+
 ### 1. Database
 
 Start MongoDB locally or create a cluster on Atlas and copy the connection string.

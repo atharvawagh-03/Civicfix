@@ -23,35 +23,75 @@ export default function CitizenDashboard() {
 
   return (
     <Layout>
-      <TopNav title="Dashboard" />
+      <TopNav title="Your impact overview" />
       {loading ? (
         <p style={{ color: 'var(--muted)' }}>Loading…</p>
       ) : (
         <>
-          <div
+          {/* Hero summary card */}
+          <section className="card card-hero card-pad" style={{ marginBottom: '1.75rem', display: 'grid', gridTemplateColumns: 'minmax(0,2fr) minmax(0,1.4fr)', gap: 20, alignItems: 'center' }}>
+            <div>
+              <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, letterSpacing: '-0.03em' }}>Thanks for fixing your city</h2>
+              <p style={{ marginTop: 8, color: 'var(--muted)', maxWidth: 420 }}>
+                Track every report you raise, see progress in real time, and help local authorities prioritise what matters most.
+              </p>
+
+              <div style={{ marginTop: 18, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Total reports</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900 }}>{total}</div>
+                </div>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Resolved</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--success)' }}>{resolved}</div>
+                </div>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>In progress</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--accent)' }}>{progress}</div>
+                </div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>Quick actions</p>
+              <div style={{ marginTop: 10, display: 'flex', justifyContent: 'flex-end', gap: 10, flexWrap: 'wrap' }}>
+                <Link to="/report" className="btn btn-primary">
+                  + Report new issue
+                </Link>
+                <Link to="/my-issues" className="btn btn-secondary">
+                  View all my issues
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          {/* Stat bar */}
+          <section
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
               gap: 14,
-              marginBottom: '1.5rem',
+              marginBottom: '1.75rem',
             }}
           >
             <StatCard label="Total reported" value={total} />
             <StatCard label="Pending" value={pending} accent="var(--warning)" />
             <StatCard label="In progress" value={progress} accent="var(--accent)" />
             <StatCard label="Resolved" value={resolved} accent="var(--success)" />
-          </div>
+          </section>
+
+          {/* Recent list */}
           <section>
             <h2 style={{ fontSize: '1.1rem', marginBottom: 12 }}>Recent issues</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {recent.length === 0 && <p style={{ color: 'var(--muted)' }}>No issues yet. Report one to get started.</p>}
               {recent.map((i) => (
-                <Link
-                  key={i.issueId}
-                  to={`/issue/${i.issueId}`}
-                  className="list-item"
-                >
-                  <span style={{ fontWeight: 800, color: 'var(--text)' }}>{i.title}</span>
+                <Link key={i.issueId} to={`/issue/${i.issueId}`} className="list-item">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <span style={{ fontWeight: 800, color: 'var(--text)' }}>{i.title}</span>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
+                      Updated {new Date(i.updatedAt).toLocaleString()}
+                    </span>
+                  </div>
                   <StatusBadge status={i.status} />
                 </Link>
               ))}

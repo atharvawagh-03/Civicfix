@@ -99,6 +99,22 @@ select {
   box-shadow: var(--shadow2);
 }
 
+.card-hero {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.35), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.22), transparent 60%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(8, 47, 73, 0.96));
+  border-color: rgba(148, 163, 184, 0.45);
+  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.85);
+}
+
+.card-hero-stat {
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(15, 23, 42, 0.6);
+}
+
 .card-pad {
   padding: 1.25rem;
 }
@@ -168,6 +184,162 @@ select {
   display: grid;
   place-items: center;
   padding: 24px;
+}
+
+.landing-shell {
+  min-height: 100vh;
+  padding: 1.15rem 1.25rem 1.4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(110deg, rgba(2, 6, 23, 0.88) 28%, rgba(2, 6, 23, 0.55) 58%, rgba(2, 6, 23, 0.88) 100%),
+    url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
+  z-index: -1;
+}
+
+.landing-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(500px 300px at 12% 14%, rgba(59, 130, 246, 0.32), transparent 68%),
+    radial-gradient(460px 320px at 86% 80%, rgba(34, 197, 94, 0.24), transparent 68%);
+}
+
+.landing-nav {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.65rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.landing-brand {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.landing-hero-wrap {
+  max-width: 1180px;
+  margin: 2rem auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1.15rem;
+  align-items: stretch;
+}
+
+.landing-hero {
+  padding: 2.1rem 2rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(155deg, rgba(11, 18, 32, 0.86), rgba(11, 18, 32, 0.62));
+  backdrop-filter: blur(7px);
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.62);
+}
+
+.landing-kicker {
+  margin: 0;
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.landing-hero h1 {
+  margin: 0.75rem 0 0;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.landing-sub {
+  margin: 0.9rem 0 0;
+  color: rgba(234, 242, 255, 0.83);
+  max-width: 740px;
+  font-size: 1.03rem;
+}
+
+.landing-stats {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-stats > div {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.landing-stats strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.landing-stats span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.landing-panel {
+  padding: 1.35rem;
+  background: linear-gradient(180deg, rgba(11, 18, 32, 0.9), rgba(15, 23, 42, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.landing-panel h3 {
+  margin: 0 0 0.8rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.landing-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+}
+
+.landing-panel li {
+  margin-bottom: 0.45rem;
+}
+
+.landing-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.landing-mini-card {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.72rem 0.76rem;
+  background: rgba(16, 25, 40, 0.5);
+}
+
+.landing-mini-card span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.landing-mini-card strong {
+  display: block;
+  margin-top: 2px;
 }
 
 .auth-card {
@@ -408,5 +580,18 @@ select {
 @media (max-width: 768px) {
   .app-shell {
     flex-direction: column;
+  }
+
+  .landing-hero-wrap {
+    grid-template-columns: 1fr;
+    margin-top: 1.2rem;
+  }
+
+  .landing-hero {
+    padding: 1.35rem 1.1rem;
+  }
+
+  .landing-stats {
+    grid-template-columns: 1fr;
   }
 }

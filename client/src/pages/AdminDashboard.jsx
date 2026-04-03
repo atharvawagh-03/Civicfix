@@ -23,11 +23,58 @@ export default function AdminDashboard() {
 
   return (
     <Layout>
-      <TopNav title="Admin dashboard" />
+      <TopNav title="City operations overview" />
       {loading ? (
         <p style={{ color: 'var(--muted)' }}>Loading…</p>
       ) : (
         <>
+          <section className="card card-hero card-pad" style={{ marginBottom: '1.75rem', display: 'grid', gridTemplateColumns: 'minmax(0,2.2fr) minmax(0,1.4fr)', gap: 22, alignItems: 'center' }}>
+            <div>
+              <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 900, letterSpacing: '-0.03em' }}>Live complaint snapshot</h2>
+              <p style={{ marginTop: 8, color: 'var(--muted)', maxWidth: 460 }}>
+                Monitor backlog, track progress across statuses and keep citizens informed with timely updates.
+              </p>
+              <div style={{ marginTop: 18, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Total issues</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900 }}>{analytics?.totalIssues ?? issues.length}</div>
+                </div>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Pending</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--warning)' }}>
+                    {analytics?.statusDistribution?.pending ?? 0}
+                  </div>
+                </div>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>In progress</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--accent)' }}>
+                    {analytics?.statusDistribution?.in_progress ?? 0}
+                  </div>
+                </div>
+                <div className="card-hero-stat">
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Resolved</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--success)' }}>
+                    {analytics?.statusDistribution?.resolved ?? 0}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>Workboard shortcuts</p>
+              <div style={{ marginTop: 10, display: 'flex', justifyContent: 'flex-end', gap: 10, flexWrap: 'wrap' }}>
+                <Link to="/manage" className="btn btn-primary">
+                  Open manage queue
+                </Link>
+              </div>
+              {analytics?.monthly?.length > 0 && (
+                <p style={{ marginTop: 14, fontSize: '0.8rem', color: 'var(--muted)' }}>
+                  Last {analytics.monthly.length} months:{' '}
+                  {analytics.monthly.map((m) => `${String(m.month).padStart(2, '0')}/${m.year}`).join(' · ')}
+                </p>
+              )}
+            </div>
+          </section>
+
           <div
             style={{
               display: 'grid',

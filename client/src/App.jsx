@@ -8,6 +8,7 @@ import ReportIssue from './pages/ReportIssue.jsx';
 import MyIssues from './pages/MyIssues.jsx';
 import ManageIssues from './pages/ManageIssues.jsx';
 import IssueDetails from './pages/IssueDetails.jsx';
+import Landing from './pages/Landing.jsx';
 
 function PrivateRoute({ children, adminOnly }) {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -74,7 +75,7 @@ export default function App() {
           <IssueDetailsRoute />
         }
       />
-      <Route path="/" element={<HomeRedirect />} />
+      <Route path="/" element={<LandingRoute />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -84,6 +85,14 @@ function HomeRedirect() {
   const { isAuthenticated, isAdmin } = useAuth();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
+}
+
+function LandingRoute() {
+  const { isAuthenticated, isAdmin } = useAuth();
+  if (isAuthenticated) {
+    return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
+  }
+  return <Landing />;
 }
 
 function IssueDetailsRoute() {
