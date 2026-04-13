@@ -104,6 +104,19 @@ export default function IssueDetails() {
             style={{ maxWidth: '100%', borderRadius: 8, border: '1px solid var(--surface2)' }}
           />
           <h2 style={{ fontSize: '1rem', color: 'var(--muted)', fontWeight: 600, marginTop: '1.5rem' }}>Location</h2>
+          {issue.address && (
+            <p style={{
+              margin: '0 0 10px 0',
+              padding: '0.6rem 0.85rem',
+              borderRadius: 10,
+              background: 'rgba(14, 165, 164, 0.08)',
+              border: '1px solid rgba(14, 165, 164, 0.2)',
+              fontSize: '0.92rem',
+              lineHeight: 1.5,
+            }}>
+              📍 {issue.address}
+            </p>
+          )}
           <IssueMap
             latitude={issue.location.latitude}
             longitude={issue.location.longitude}

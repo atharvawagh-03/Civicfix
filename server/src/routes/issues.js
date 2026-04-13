@@ -41,7 +41,7 @@ router.post('/issue', requireAuth, upload.single('image'), async (req, res) => {
     if (req.user.role !== 'citizen') {
       return res.status(403).json({ message: 'Only citizens can report issues' });
     }
-    const { title, description, latitude, longitude } = req.body;
+    const { title, description, latitude, longitude, address } = req.body;
     const lat = parseFloat(latitude);
     const lng = parseFloat(longitude);
     if (!title || !description || !req.file || Number.isNaN(lat) || Number.isNaN(lng)) {
@@ -55,6 +55,7 @@ router.post('/issue', requireAuth, upload.single('image'), async (req, res) => {
       description,
       image,
       location: { latitude: lat, longitude: lng },
+      address: address || '',
       createdBy: req.user.id,
       statusHistory: [{ status: 'pending', at: new Date(), by: req.user.id }],
     });
@@ -245,6 +246,7 @@ function formatIssueLean(o) {
     description: o.description,
     image: o.image,
     location: o.location,
+    address: o.address || '',
     status: o.status,
     createdBy: o.createdBy,
     assignedTo: o.assignedTo,

@@ -11,13 +11,19 @@ export default function ReportIssue() {
   const [file, setFile] = useState(null);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
+  const [address, setAddress] = useState('');
+  const [locationMode, setLocationMode] = useState('map'); // 'map' or 'manual'
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (lat == null || lng == null) {
+    if (locationMode === 'map' && (lat == null || lng == null)) {
       setError('Click the map to set a location.');
+      return;
+    }
+    if (locationMode === 'manual' && !address.trim()) {
+      setError('Please enter the address.');
       return;
     }
     if (!file) {
@@ -30,8 +36,10 @@ export default function ReportIssue() {
       const fd = new FormData();
       fd.append('title', title);
       fd.append('description', description);
-      fd.append('latitude', String(lat));
-      fd.append('longitude', String(lng));
+      // When manual mode, send default coords (0, 0) and address text
+      fd.append('latitude', String(lat ?? 0));
+      fd.append('longitude', String(lng ?? 0));
+      fd.append('address', address);
       fd.append('image', file);
       const issue = await createIssue(fd);
       navigate(`/issue/${issue.issueId}`);
@@ -88,20 +96,72 @@ export default function ReportIssue() {
             />
           </label>
 
+          {/* ── Location section ── */}
           <div style={{ marginBottom: 6 }}>
-            <span className="field-label">Location — click on the map</span>
-            <LocationPickerMap
-              latitude={lat}
-              longitude={lng}
-              onChange={(la, lo) => {
-                setLat(la);
-                setLng(lo);
-              }}
-            />
-            {lat != null && lng != null && (
-              <p className="form-help">
-                {lat.toFixed(5)}, {lng.toFixed(5)}
-              </p>
+            <span className="field-label">Location</span>
+
+            {/* Toggle tabs */}
+            <div className="location-toggle">
+              <button
+                type="button"
+                className={`location-toggle-btn${locationMode === 'map' ? ' active' : ''}`}
+                onClick={() => setLocationMode('map')}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Pick on Map
+              </button>
+              <button
+                type="button"
+                className={`location-toggle-btn${locationMode === 'manual' ? ' active' : ''}`}
+                onClick={() => setLocationMode('manual')}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="4" y1="9" x2="20" y2="9" />
+                  <line x1="4" y1="15" x2="20" y2="15" />
+                  <line x1="10" y1="3" x2="8" y2="21" />
+                  <line x1="16" y1="3" x2="14" y2="21" />
+                </svg>
+                Enter Address
+              </button>
+            </div>
+
+            {/* Map picker */}
+            {locationMode === 'map' && (
+              <div className="location-panel">
+                <LocationPickerMap
+                  latitude={lat}
+                  longitude={lng}
+                  onChange={(la, lo) => {
+                    setLat(la);
+                    setLng(lo);
+                  }}
+                />
+                {lat != null && lng != null && (
+                  <p className="form-help">
+                    📍 {lat.toFixed(5)}, {lng.toFixed(5)}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Manual address input */}
+            {locationMode === 'manual' && (
+              <div className="location-panel">
+                <textarea
+                  className="form-control"
+                  rows={3}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter full address, e.g. 123 Main Street, City, State, PIN"
+                  style={{ resize: 'vertical' }}
+                />
+                <p className="form-help" style={{ fontSize: '0.82rem', opacity: 0.7 }}>
+                  💡 Tip: Include landmark, street, area, city and PIN code for accurate location
+                </p>
+              </div>
             )}
           </div>
 
