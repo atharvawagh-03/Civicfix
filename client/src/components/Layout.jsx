@@ -1,5 +1,6 @@
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import ChatBot from './ChatBot.jsx';
 
 function navClass({ isActive }) {
   return `nav-link ${isActive ? 'nav-link-active' : ''}`;
@@ -70,6 +71,7 @@ export default function Layout({ children }) {
 
         <div className="main-area">{children}</div>
       </div>
+      {user && <ChatBot />}
     </div>
   );
 }

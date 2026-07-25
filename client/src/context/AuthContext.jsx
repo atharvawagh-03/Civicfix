@@ -23,18 +23,21 @@ export function AuthProvider({ children }) {
       user,
       isAuthenticated: !!user,
       isAdmin: user?.role === 'admin',
+
       async login(email, password) {
         const data = await apiLogin({ email, password });
         setAuthToken(data.token);
         setUser(data.user);
         return data;
       },
+
       async register(payload) {
         const data = await apiRegister(payload);
         setAuthToken(data.token);
         setUser(data.user);
         return data;
       },
+
       logout() {
         setAuthToken(null);
         setUser(null);

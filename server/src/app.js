@@ -5,13 +5,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import issueRoutes from './routes/issues.js';
+import aiRoutes from './routes/ai.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    origin: "*",   // TEMP FIX (for testing)
     credentials: true,
   })
 );
@@ -20,6 +21,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use(authRoutes);
 app.use(issueRoutes);
+app.use(aiRoutes);
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 

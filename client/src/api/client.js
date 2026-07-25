@@ -1,9 +1,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '',
+  baseURL: 'http://localhost:5000',
   headers: { 'Content-Type': 'application/json' },
 });
+
+// 🔥 DEBUG (VERY IMPORTANT)
+console.log("API BASE URL:", api.defaults.baseURL);
+console.log("SENDING REQUEST TO:", api.defaults.baseURL);
 
 export function setAuthToken(token) {
   if (token) {
@@ -19,13 +23,30 @@ const saved = localStorage.getItem('civicfix_token');
 if (saved) setAuthToken(saved);
 
 export async function register(body) {
-  const { data } = await api.post('/register', body);
-  return data;
+  try {
+    const response = await api.post('/register', body);
+
+    console.log("REGISTER SUCCESS:", response.data); // ✅ debug
+
+    return response.data; // ✅ important
+  } catch (err) {
+    console.log("REGISTER ERROR FULL:", err); // 👈 full error
+    console.log("REGISTER ERROR DATA:", err.response?.data);
+
+    // 👇 IMPORTANT: return proper message
+    throw err.response?.data || { message: "Registration failed" };
+  }
 }
 
 export async function login(body) {
-  const { data } = await api.post('/login', body);
-  return data;
+  try {
+    console.log("LOGIN REQUEST:", body); // DEBUG
+    const { data } = await api.post('/login', body);
+    return data;
+  } catch (err) {
+    console.log("LOGIN ERROR:", err.response?.data);
+    throw err;
+  }
 }
 
 export async function fetchIssues(params) {
@@ -57,6 +78,11 @@ export async function deleteIssue(id) {
 
 export async function fetchAnalytics() {
   const { data } = await api.get('/analytics');
+  return data;
+}
+
+export async function sendChatMessage(history, message) {
+  const { data } = await api.post('/chat', { history, message });
   return data;
 }
 

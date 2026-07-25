@@ -16,14 +16,22 @@ export default function Register() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    try {
-      const data = await register({ name, email, password, role });
-      navigate(data.user.role === 'admin' ? '/admin' : '/dashboard', { replace: true });
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
-    } finally {
-      setLoading(false);
+
+    const res = await register({ name, email, password, role });
+
+    console.log("REGISTER RESPONSE:", res);
+
+    if (!res.success) {
+      setError(res.message || 'Registration failed');
+    } else {
+      const user = res.data.user;
+
+      navigate(user.role === 'admin' ? '/admin' : '/dashboard', {
+        replace: true,
+      });
     }
+
+    setLoading(false);
   }
 
   return (

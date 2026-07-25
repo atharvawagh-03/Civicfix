@@ -7,16 +7,28 @@ const router = Router();
 
 router.post('/register', async (req, res) => {
   try {
+    console.log("REGISTER BODY:", req.body); // 👈 ADD
+
     const { name, email, password, role = 'citizen' } = req.body;
+
     if (!name || !email || !password) {
+      console.log("MISSING FIELD");
       return res.status(400).json({ message: 'Name, email, and password are required' });
     }
-    const r = role === 'admin' ? 'admin' : 'citizen';
-    const existing = await User.findOne({ email: email.toLowerCase() });
-    if (existing) return res.status(409).json({ message: 'Email already registered' });
+
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+
+    console.log("CHECK EMAIL:", email);
+    console.log("FOUND USER:", existing); // 👈 ADD
+
+    if (existing) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
+
     const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hash, role: r });
+    const user = await User.create({ name, email, password: hash, role });
     const token = signToken({ sub: user._id.toString(), role: user.role });
+
     return res.status(201).json({
       token,
       user: {
@@ -27,7 +39,9 @@ router.post('/register', async (req, res) => {
         createdAt: user.createdAt,
       },
     });
+
   } catch (e) {
+    console.log("REGISTER ERROR:", e); // 👈 VERY IMPORTANT
     return res.status(500).json({ message: e.message || 'Registration failed' });
   }
 });
@@ -54,6 +68,7 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (e) {
+    console.error("LOGIN ERROR:", e);
     return res.status(500).json({ message: e.message || 'Login failed' });
   }
 });
