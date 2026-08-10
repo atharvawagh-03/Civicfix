@@ -5,11 +5,10 @@
   "scripts": {
     "dev": "concurrently -n API,WEB -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
     "install:all": "npm --prefix server install && npm --prefix client install",
-    "build": "npm --prefix client run build",
+    "build": "npm install --prefix client && npm run build --prefix client",
     "test": "npm --prefix server test"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
   }
 }
-
