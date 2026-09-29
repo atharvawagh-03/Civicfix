@@ -17,21 +17,23 @@ export default function Register() {
     setError('');
     setLoading(true);
 
-    const res = await register({ name, email, password, role });
+    try {
+      const data = await register({ name, email, password, role });
+      const user = data.user;
 
-    console.log("REGISTER RESPONSE:", res);
-
-    if (!res.success) {
-      setError(res.message || 'Registration failed');
-    } else {
-      const user = res.data.user;
+      if (!user) {
+        setError('Registration failed');
+        return;
+      }
 
       navigate(user.role === 'admin' ? '/admin' : '/dashboard', {
         replace: true,
       });
+    } catch (err) {
+      setError(err?.message || err?.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   return (
