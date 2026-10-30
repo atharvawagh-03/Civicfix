@@ -5,14 +5,45 @@ import civicHeroImg from '../assets/civic-hero.jpg';
 
 export default function Landing() {
   const { isAuthenticated, isAdmin } = useAuth();
+  const [showDetails, setShowDetails] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dashPath = isAdmin ? '/admin' : '/dashboard';
 
   return (
-    <div className="landing-shell">
-      <header className="landing-nav">
-        <div className="landing-brand">CivicFix</div>
-        <div style={{ display: 'flex', gap: 10 }}>
+    <div className="landing-fullscreen-shell">
+      {/* Full-Screen Hero Visual Backdrop */}
+      <div className="landing-hero-backdrop">
+        <img
+          src={civicHeroImg}
+          alt="CivicFix: Citizen reporting an issue while municipal crews repair roads and streetlights"
+          className="landing-fullscreen-img"
+        />
+        <div className="landing-backdrop-overlay" />
+      </div>
+
+      {/* Floating Top Navbar */}
+      <header className="landing-nav-floating">
+        <div className="landing-brand">
+          <span className="brand-dot" /> CivicFix
+        </div>
+
+        <div className="landing-nav-actions">
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => setShowDetails(!showDetails)}
+            title="Toggle card overlay to see full unobstructed image"
+          >
+            {showDetails ? '👁️ View Image' : '📋 Show Details'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => setIsModalOpen(true)}
+            title="Open image in full-screen modal"
+          >
+            ⛶ Fullscreen
+          </button>
           {isAuthenticated ? (
             <Link to={dashPath} className="btn btn-primary">
               Go to Dashboard
@@ -30,128 +61,127 @@ export default function Landing() {
         </div>
       </header>
 
-      <main className="landing-hero-wrap">
-        <section className="landing-hero">
-          <p className="landing-kicker">Public issue reporting platform</p>
-          <h1>Report city problems in seconds. Track every fix in real time.</h1>
-          <p className="landing-sub">
-            CivicFix helps citizens report potholes, garbage, and infrastructure issues with photos and map location,
-            while authorities manage assignments and status updates from one modern dashboard.
-          </p>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 18 }}>
-            {isAuthenticated ? (
-              <Link to={dashPath} className="btn btn-primary">
-                Go to Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link to="/register" className="btn btn-primary">
-                  Report your first issue
-                </Link>
-                <Link to="/login" className="btn btn-secondary">
-                  I already have an account
-                </Link>
-              </>
-            )}
-          </div>
-          <div className="landing-stats">
-            <div>
-              <strong>Image + map</strong>
-              <span>Precise issue reporting</span>
+      {/* Hero Content Floating Over Full-Screen Visual */}
+      {showDetails && (
+        <main className="landing-fullscreen-content">
+          <div className="landing-hero-card">
+            <div className="landing-badge-pill">
+              <span className="live-dot" /> Public Issue Reporting & Resolution Platform
             </div>
-            <div>
-              <strong>Role-based</strong>
-              <span>Citizen and Admin dashboards</span>
-            </div>
-            <div>
-              <strong>Live lifecycle</strong>
-              <span>Pending → In Progress → Resolved</span>
-            </div>
-          </div>
-        </section>
+            <h1>Report city problems in seconds. Track every fix in real time.</h1>
+            <p className="landing-sub">
+              CivicFix connects citizens directly to municipal authorities. Snap a photo of a pothole,
+              garbage pile, or street hazard with automatic GPS location — and watch city crews repair and resolve it live.
+            </p>
 
-        <aside className="landing-panel card">
-          <div
-            className="landing-panel-image-wrap"
-            onClick={() => setIsModalOpen(true)}
-            title="Click to view full illustration"
-          >
-            <img
-              src={civicHeroImg}
-              alt="CivicFix in action: citizens reporting and crews repairing infrastructure"
-              className="landing-panel-image"
-            />
-            <div className="landing-panel-badge">
-              <span className="live-dot" /> CivicFix in Action
+            <div className="landing-cta-row">
+              {isAuthenticated ? (
+                <Link to={dashPath} className="btn btn-primary btn-lg">
+                  Go to Dashboard →
+                </Link>
+              ) : (
+                <>
+                  <Link to="/register" className="btn btn-primary btn-lg">
+                    Report an Issue Now
+                  </Link>
+                  <Link to="/login" className="btn btn-secondary btn-lg">
+                    I already have an account
+                  </Link>
+                </>
+              )}
             </div>
-          </div>
-          <h3>Why people love CivicFix</h3>
-          <ul>
-            <li>Simple issue form with photo upload and map pin selection.</li>
-            <li>Transparent status timeline so citizens always know progress.</li>
-            <li>Authority tools for assignment, comments, and analytics.</li>
-          </ul>
-          <div className="landing-mini-grid">
-            <div className="landing-mini-card">
-              <span>Citizen</span>
-              <strong>Quick report</strong>
-            </div>
-            <div className="landing-mini-card">
-              <span>Admin</span>
-              <strong>Manage queue</strong>
-            </div>
-          </div>
-        </aside>
-      </main>
 
-      <section className="landing-showcase-wrap">
-        <div className="landing-showcase-card">
-          <div className="landing-showcase-header">
-            <span className="landing-kicker">End-to-End Civic Workflow</span>
-            <h2>Bridging Citizens & Municipal Action</h2>
-            <p className="landing-showcase-sub">
-              From snapping a quick photo on your street to dispatching repair machinery and restoring public infrastructure.
+            <div className="landing-stats-row">
+              <div className="landing-stat-box">
+                <span className="stat-icon">📸</span>
+                <div>
+                  <strong>Photo + GPS</strong>
+                  <span>Instant geo-tagged report</span>
+                </div>
+              </div>
+              <div className="landing-stat-box">
+                <span className="stat-icon">🚜</span>
+                <div>
+                  <strong>Field Crew Dispatch</strong>
+                  <span>Road, lighting & sanitation</span>
+                </div>
+              </div>
+              <div className="landing-stat-box">
+                <span className="stat-icon">🔄</span>
+                <div>
+                  <strong>Live Progress</strong>
+                  <span>Pending → In Progress → Resolved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      )}
+
+      {/* Floating Toggle Button for Convenience */}
+      <button
+        type="button"
+        className="view-image-pill"
+        onClick={() => setShowDetails(!showDetails)}
+        title="Toggle overlay to view the full screen illustration"
+      >
+        {showDetails ? '👁️ View Full Image' : '📋 Show Platform Info'}
+      </button>
+
+      {/* Full-Width Showcase & Workflow Section */}
+      <section className="landing-workflow-section">
+        <div className="landing-workflow-card">
+          <div className="landing-workflow-header">
+            <span className="landing-badge-pill">Complete Community Workflow</span>
+            <h2>From Citizen Report to Real-World Fix</h2>
+            <p>
+              CivicFix transforms civic maintenance into a collaborative, transparent experience for everyone in the city.
             </p>
           </div>
 
           <div
-            className="landing-showcase-media"
+            className="landing-full-image-container"
             onClick={() => setIsModalOpen(true)}
-            title="Click to view full illustration"
+            title="Click to view high-resolution full-screen image"
           >
             <img
               src={civicHeroImg}
-              alt="CivicFix in action: citizen photographing road pothole while municipal team repairs street infrastructure"
-              className="landing-showcase-img"
+              alt="CivicFix full panoramic illustration showing citizen reporting and crews repairing city streets"
             />
+            <div className="landing-image-expand-hint">
+              ⛶ Click to expand full size
+            </div>
           </div>
 
-          <div className="landing-showcase-features">
-            <div className="landing-feature-chip">
-              <span className="chip-icon">📸</span>
-              <div>
-                <strong>1. Snap & Pinpoint</strong>
-                <p>Citizens capture photo proof and exact GPS map coordinates in seconds.</p>
-              </div>
+          <div className="landing-workflow-grid">
+            <div className="landing-workflow-item">
+              <span className="landing-workflow-icon">📸</span>
+              <h4>1. Citizens Spot & Report</h4>
+              <p>
+                Take a photo directly from your smartphone. GPS coordinates and category are pinpointed automatically.
+              </p>
             </div>
-            <div className="landing-feature-chip">
-              <span className="chip-icon">🚜</span>
-              <div>
-                <strong>2. Dispatch & Repair</strong>
-                <p>Authorities assign crews, asphalt machinery, and equipment straight to the site.</p>
-              </div>
+
+            <div className="landing-workflow-item">
+              <span className="landing-workflow-icon">🚜</span>
+              <h4>2. Municipal Dispatch</h4>
+              <p>
+                City departments receive the ticket in real time, deploy road rollers, repair crews, and prioritize urgent issues.
+              </p>
             </div>
-            <div className="landing-feature-chip">
-              <span className="chip-icon">✨</span>
-              <div>
-                <strong>3. Verified Resolution</strong>
-                <p>Real-time timeline updates keep the neighborhood informed every step of the way.</p>
-              </div>
+
+            <div className="landing-workflow-item">
+              <span className="landing-workflow-icon">✨</span>
+              <h4>3. Verified Resolution</h4>
+              <p>
+                Repairs are photo-verified upon completion and the public status timeline is updated live for all residents.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Full-Screen Lightbox Modal */}
       {isModalOpen && (
         <div
           className="image-modal-backdrop"
@@ -169,7 +199,8 @@ export default function Landing() {
             </button>
             <img
               src={civicHeroImg}
-              alt="CivicFix Community Action Illustration"
+              alt="CivicFix Fullscreen City Action Illustration"
+              className="image-modal-full"
             />
           </div>
         </div>
