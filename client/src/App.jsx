@@ -75,7 +75,7 @@ export default function App() {
           <IssueDetailsRoute />
         }
       />
-      <Route path="/" element={<LandingRoute />} />
+      <Route path="/" element={<Landing />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

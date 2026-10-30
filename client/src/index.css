@@ -199,7 +199,7 @@ select {
   inset: 0;
   background:
     linear-gradient(110deg, rgba(2, 6, 23, 0.88) 28%, rgba(2, 6, 23, 0.55) 58%, rgba(2, 6, 23, 0.88) 100%),
-    url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
+    url('./assets/civic-hero.jpg') center/cover no-repeat;
   z-index: -1;
 }
 
@@ -784,4 +784,222 @@ select {
 
 .chatbot-input-area .btn {
   padding: 8px 16px;
+}
+
+
+/* Landing Panel Image */
+.landing-panel-image-wrap {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.landing-panel-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.landing-panel-image-wrap:hover .landing-panel-image {
+  transform: scale(1.04);
+}
+
+.landing-panel-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f1f5f9;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  display: inline-block;
+}
+
+/* Landing Showcase Section */
+.landing-showcase-wrap {
+  max-width: 1180px;
+  margin: 2.2rem auto 2.5rem;
+}
+
+.landing-showcase-card {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(11, 18, 32, 0.75));
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.5);
+}
+
+.landing-showcase-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 1.8rem;
+}
+
+.landing-showcase-header h2 {
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  margin: 0.5rem 0 0.6rem;
+  letter-spacing: -0.02em;
+}
+
+.landing-showcase-sub {
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.landing-showcase-media {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.landing-showcase-img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.landing-showcase-img:hover {
+  transform: scale(1.015);
+}
+
+.landing-showcase-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 1.5rem;
+}
+
+.landing-feature-chip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.landing-feature-chip:hover {
+  background: rgba(30, 41, 59, 0.65);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.chip-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.landing-feature-chip strong {
+  display: block;
+  font-size: 0.96rem;
+  color: #f8fafc;
+}
+
+.landing-feature-chip p {
+  margin: 4px 0 0;
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Image Modal / Lightbox */
+.image-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.88);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.image-modal-content {
+  position: relative;
+  max-width: 1100px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.8);
+}
+
+.image-modal-content img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 85vh;
+  object-fit: contain;
+  background: #000;
+}
+
+.image-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.image-modal-close:hover {
+  background: rgba(239, 68, 68, 0.85);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .landing-showcase-features {
+    grid-template-columns: 1fr;
+  }
+  .landing-showcase-card {
+    padding: 1.25rem;
+  }
 }
