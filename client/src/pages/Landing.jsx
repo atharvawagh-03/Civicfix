@@ -4,10 +4,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 import civicHeroImg from '../assets/civic-hero.jpg';
 
 export default function Landing() {
-  const { isAuthenticated, isAdmin } = useAuth();
-  const [showDetails, setShowDetails] = useState(true);
+  const { user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dashPath = isAdmin ? '/admin' : '/dashboard';
 
   return (
     <div className="landing-fullscreen-shell">
@@ -21,112 +19,133 @@ export default function Landing() {
         <div className="landing-backdrop-overlay" />
       </div>
 
-      {/* Floating Top Navbar */}
+      {/* Floating Top Navbar with Separate Login Portals */}
       <header className="landing-nav-floating">
         <div className="landing-brand">
           <span className="brand-dot" /> CivicFix
         </div>
 
         <div className="landing-nav-actions">
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => setShowDetails(!showDetails)}
-            title="Toggle card overlay to see full unobstructed image"
-          >
-            {showDetails ? '👁️ View Image' : '📋 Show Details'}
-          </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => setIsModalOpen(true)}
-            title="Open image in full-screen modal"
-          >
-            ⛶ Fullscreen
-          </button>
-          {isAuthenticated ? (
-            <Link to={dashPath} className="btn btn-primary">
-              Go to Dashboard
-            </Link>
-          ) : (
-            <>
-              <Link to="/login" className="btn btn-secondary">
-                Sign in
-              </Link>
-              <Link to="/register" className="btn btn-primary">
-                Get started
-              </Link>
-            </>
+          {user && (
+            <div className="user-status-pill">
+              <span>Signed in as:</span>
+              <strong>{user.name} ({user.role})</strong>
+              <button
+                type="button"
+                onClick={logout}
+                className="btn btn-ghost"
+                style={{ padding: '2px 8px', fontSize: '0.75rem', borderRadius: '6px' }}
+                title="Sign out of current account"
+              >
+                Log out
+              </button>
+            </div>
           )}
+
+          {/* Explicit Separate Logins */}
+          <Link to="/login?role=citizen" className="btn btn-primary" title="Citizen portal login">
+            👤 Citizen Login
+          </Link>
+
+          <Link to="/login?role=admin" className="btn btn-admin" title="Admin authority login">
+            🛡️ Admin Login
+          </Link>
         </div>
       </header>
 
       {/* Hero Content Floating Over Full-Screen Visual */}
-      {showDetails && (
-        <main className="landing-fullscreen-content">
-          <div className="landing-hero-card">
-            <div className="landing-badge-pill">
-              <span className="live-dot" /> Public Issue Reporting & Resolution Platform
-            </div>
-            <h1>Report city problems in seconds. Track every fix in real time.</h1>
-            <p className="landing-sub">
-              CivicFix connects citizens directly to municipal authorities. Snap a photo of a pothole,
-              garbage pile, or street hazard with automatic GPS location — and watch city crews repair and resolve it live.
-            </p>
+      <main className="landing-fullscreen-content">
+        <div className="landing-hero-card">
+          <div className="landing-badge-pill">
+            <span className="live-dot" /> Public Issue Reporting & Resolution Platform
+          </div>
 
-            <div className="landing-cta-row">
-              {isAuthenticated ? (
-                <Link to={dashPath} className="btn btn-primary btn-lg">
-                  Go to Dashboard →
+          <h1>Report city problems in seconds. Track every fix in real time.</h1>
+
+          <p className="landing-sub">
+            CivicFix connects citizens directly to municipal authorities. Snap a photo of a pothole,
+            garbage pile, or street hazard with automatic GPS location — and watch city crews repair and resolve it live.
+          </p>
+
+          {/* Separate Portals for Citizen & Admin */}
+          <div className="landing-portals-grid">
+            {/* Citizen Access Portal */}
+            <div className="portal-access-card citizen-portal">
+              <div>
+                <div className="portal-card-header">
+                  <div className="portal-icon-badge">👤</div>
+                  <div>
+                    <h3>Citizen Portal</h3>
+                    <span>For Residents & Public</span>
+                  </div>
+                </div>
+                <p className="portal-card-desc" style={{ marginTop: '0.75rem' }}>
+                  Report potholes, waste, and hazards with photo upload & live GPS. Track resolution milestones in real time.
+                </p>
+              </div>
+
+              <div className="portal-actions">
+                <Link to="/login?role=citizen" className="btn btn-primary btn-lg btn-full">
+                  Citizen Login →
                 </Link>
-              ) : (
-                <>
-                  <Link to="/register" className="btn btn-primary btn-lg">
-                    Report an Issue Now
-                  </Link>
-                  <Link to="/login" className="btn btn-secondary btn-lg">
-                    I already have an account
-                  </Link>
-                </>
-              )}
+                <Link to="/register?role=citizen" className="portal-sub-link">
+                  New citizen? Register here
+                </Link>
+              </div>
             </div>
 
-            <div className="landing-stats-row">
-              <div className="landing-stat-box">
-                <span className="stat-icon">📸</span>
-                <div>
-                  <strong>Photo + GPS</strong>
-                  <span>Instant geo-tagged report</span>
+            {/* Admin Access Portal */}
+            <div className="portal-access-card admin-portal">
+              <div>
+                <div className="portal-card-header">
+                  <div className="portal-icon-badge">🛡️</div>
+                  <div>
+                    <h3>Admin & Authority</h3>
+                    <span>Municipal Staff & Supervisors</span>
+                  </div>
                 </div>
+                <p className="portal-card-desc" style={{ marginTop: '0.75rem' }}>
+                  Access municipal queues, assign maintenance crews & road rollers, update statuses, and verify completed fixes.
+                </p>
               </div>
-              <div className="landing-stat-box">
-                <span className="stat-icon">🚜</span>
-                <div>
-                  <strong>Field Crew Dispatch</strong>
-                  <span>Road, lighting & sanitation</span>
-                </div>
-              </div>
-              <div className="landing-stat-box">
-                <span className="stat-icon">🔄</span>
-                <div>
-                  <strong>Live Progress</strong>
-                  <span>Pending → In Progress → Resolved</span>
+
+              <div className="portal-actions">
+                <Link to="/login?role=admin" className="btn btn-admin btn-lg btn-full">
+                  Admin Login →
+                </Link>
+                <div className="portal-secure-badge">
+                  <span>🔒 Authorized Municipal Personnel</span>
                 </div>
               </div>
             </div>
           </div>
-        </main>
-      )}
 
-      {/* Floating Toggle Button for Convenience */}
-      <button
-        type="button"
-        className="view-image-pill"
-        onClick={() => setShowDetails(!showDetails)}
-        title="Toggle overlay to view the full screen illustration"
-      >
-        {showDetails ? '👁️ View Full Image' : '📋 Show Platform Info'}
-      </button>
+          {/* Platform Feature Stats */}
+          <div className="landing-stats-row">
+            <div className="landing-stat-box">
+              <span className="stat-icon">📸</span>
+              <div>
+                <strong>Photo + GPS</strong>
+                <span>Instant geo-tagged report</span>
+              </div>
+            </div>
+            <div className="landing-stat-box">
+              <span className="stat-icon">🚜</span>
+              <div>
+                <strong>Field Crew Dispatch</strong>
+                <span>Road, lighting & sanitation</span>
+              </div>
+            </div>
+            <div className="landing-stat-box">
+              <span className="stat-icon">🔄</span>
+              <div>
+                <strong>Live Progress</strong>
+                <span>Pending → In Progress → Resolved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
 
       {/* Full-Width Showcase & Workflow Section */}
       <section className="landing-workflow-section">
@@ -156,17 +175,17 @@ export default function Landing() {
           <div className="landing-workflow-grid">
             <div className="landing-workflow-item">
               <span className="landing-workflow-icon">📸</span>
-              <h4>1. Citizens Spot & Report</h4>
+              <h4>1. Citizen Portal: Spot & Report</h4>
               <p>
-                Take a photo directly from your smartphone. GPS coordinates and category are pinpointed automatically.
+                Citizens snap a photo of any issue with exact GPS location in seconds. Automatic ticket creation.
               </p>
             </div>
 
             <div className="landing-workflow-item">
               <span className="landing-workflow-icon">🚜</span>
-              <h4>2. Municipal Dispatch</h4>
+              <h4>2. Admin Portal: Dispatch & Repair</h4>
               <p>
-                City departments receive the ticket in real time, deploy road rollers, repair crews, and prioritize urgent issues.
+                Municipal supervisors review the ticket, assign road rollers and technicians, and begin active work.
               </p>
             </div>
 
@@ -174,7 +193,7 @@ export default function Landing() {
               <span className="landing-workflow-icon">✨</span>
               <h4>3. Verified Resolution</h4>
               <p>
-                Repairs are photo-verified upon completion and the public status timeline is updated live for all residents.
+                Repairs are verified with photo proof, and the status changes to Resolved live for all neighbors to see.
               </p>
             </div>
           </div>

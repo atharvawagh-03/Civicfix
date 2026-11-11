@@ -1360,3 +1360,231 @@ select {
     padding: 1.5rem 1.2rem;
   }
 }
+
+
+/* Separate Citizen and Admin Portals & Login Styles */
+.btn-admin {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+  color: #ffffff;
+}
+
+.btn-admin:hover {
+  background: linear-gradient(180deg, #1d4ed8, #1e40af);
+  color: #ffffff;
+}
+
+.landing-portals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 1.8rem;
+}
+
+.portal-access-card {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  padding: 1.4rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-access-card:hover {
+  transform: translateY(-2px);
+  background: rgba(22, 33, 56, 0.85);
+}
+
+.portal-access-card.citizen-portal {
+  border-color: rgba(20, 184, 166, 0.35);
+  box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15);
+}
+
+.portal-access-card.citizen-portal:hover {
+  border-color: rgba(20, 184, 166, 0.6);
+  box-shadow: 0 15px 35px rgba(13, 148, 136, 0.25);
+}
+
+.portal-access-card.admin-portal {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+}
+
+.portal-access-card.admin-portal:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.25);
+}
+
+.portal-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portal-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.citizen-portal .portal-icon-badge {
+  background: rgba(13, 148, 136, 0.2);
+  border: 1px solid rgba(20, 184, 166, 0.4);
+}
+
+.admin-portal .portal-icon-badge {
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.portal-card-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.portal-card-header span {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.portal-card-desc {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(241, 245, 249, 0.82);
+}
+
+.portal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.portal-sub-link {
+  font-size: 0.8rem;
+  color: #93c5fd;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.portal-sub-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.portal-secure-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.76rem;
+  color: #94a3b8;
+  padding: 4px 0;
+}
+
+/* Auth Role Segmented Tabs (Login.jsx) */
+.role-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 5px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 1.25rem;
+}
+
+.role-tab-btn {
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+}
+
+.role-tab-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.role-tab-btn.active.citizen {
+  background: linear-gradient(180deg, rgba(14, 165, 164, 0.9), rgba(13, 148, 136, 0.9));
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+
+.role-tab-btn.active.admin {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.role-portal-banner {
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.role-portal-banner.citizen {
+  background: rgba(13, 148, 136, 0.15);
+  border: 1px solid rgba(20, 184, 166, 0.3);
+  color: #99f6e4;
+}
+
+.role-portal-banner.admin {
+  background: rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #bfdbfe;
+}
+
+/* User Session Status Bar in Nav */
+.user-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+.user-status-pill strong {
+  color: #38bdf8;
+}
+
+@media (max-width: 768px) {
+  .landing-portals-grid {
+    grid-template-columns: 1fr;
+  }
+}
