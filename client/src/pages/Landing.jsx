@@ -7,6 +7,27 @@ export default function Landing() {
   const { user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Contact form state
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactCategory, setContactCategory] = useState('general');
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [contactSending, setContactSending] = useState(false);
+
+  function handleContactSubmit(e) {
+    e.preventDefault();
+    setContactSending(true);
+    // Simulate swift submission handling
+    setTimeout(() => {
+      setContactSending(false);
+      setContactSubmitted(true);
+      setContactName('');
+      setContactEmail('');
+      setContactMessage('');
+    }, 600);
+  }
+
   return (
     <div className="landing-fullscreen-shell">
       {/* Full-Screen Hero Visual Backdrop */}
@@ -19,11 +40,18 @@ export default function Landing() {
         <div className="landing-backdrop-overlay" />
       </div>
 
-      {/* Floating Top Navbar with Separate Login Portals */}
+      {/* Floating Top Navbar with Navigation Links & Separate Portals */}
       <header className="landing-nav-floating">
         <div className="landing-brand">
           <span className="brand-dot" /> CivicFix
         </div>
+
+        {/* Anchor Navigation Links */}
+        <nav className="landing-nav-links">
+          <a href="#about" className="landing-nav-link">About</a>
+          <a href="#workflow" className="landing-nav-link">How It Works</a>
+          <a href="#contact" className="landing-nav-link">Contact Us</a>
+        </nav>
 
         <div className="landing-nav-actions">
           {user && (
@@ -148,7 +176,7 @@ export default function Landing() {
       </main>
 
       {/* Full-Width Showcase & Workflow Section */}
-      <section className="landing-workflow-section">
+      <section id="workflow" className="landing-workflow-section">
         <div className="landing-workflow-card">
           <div className="landing-workflow-header">
             <span className="landing-badge-pill">Complete Community Workflow</span>
@@ -199,6 +227,265 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* About Us Section */}
+      <section id="about" className="landing-about-section">
+        <div className="landing-about-card">
+          <div className="landing-about-header">
+            <span className="landing-badge-pill">Who We Are & What We Do</span>
+            <h2>About CivicFix</h2>
+            <p>
+              CivicFix is a modern public infrastructure management platform designed to eliminate the barrier
+              between city residents and municipal maintenance departments. We empower every citizen to be the eyes of their city,
+              ensuring public streets, lighting, sanitation, and utilities are fixed swiftly and transparently.
+            </p>
+          </div>
+
+          <div className="landing-about-pillars">
+            <div className="about-pillar-card">
+              <div className="pillar-icon-wrap">🛡️</div>
+              <h4>Radical Transparency</h4>
+              <p>
+                No more lost complaints or bureaucratic black holes. Every ticket is publicly tracked with timestamped status changes from Pending to In Progress to Resolved.
+              </p>
+            </div>
+
+            <div className="about-pillar-card">
+              <div className="pillar-icon-wrap">📍</div>
+              <h4>Precise Geo-Tagging</h4>
+              <p>
+                Interactive maps and GPS coordinates ensure municipal teams know the exact pothole, broken streetlight, or illegal dump site without guessing.
+              </p>
+            </div>
+
+            <div className="about-pillar-card">
+              <div className="pillar-icon-wrap">🚜</div>
+              <h4>Direct Municipal Dispatch</h4>
+              <p>
+                Authorities have access to tailored queue filters, severity indicators, and machinery assignment tools to dispatch field crews where they are needed most.
+              </p>
+            </div>
+
+            <div className="about-pillar-card">
+              <div className="pillar-icon-wrap">🤝</div>
+              <h4>Community Collaboration</h4>
+              <p>
+                When citizens and authorities work together, neighborhoods become cleaner, safer, and more resilient. CivicFix gives community members a direct stake in urban upkeep.
+              </p>
+            </div>
+          </div>
+
+          <div className="landing-about-stats">
+            <div className="about-stat-item">
+              <span className="about-stat-number">100%</span>
+              <span className="about-stat-label">Real-Time Tracking Transparency</span>
+            </div>
+            <div className="about-stat-item">
+              <span className="about-stat-number">24/7</span>
+              <span className="about-stat-label">Citizen Reporting Accessibility</span>
+            </div>
+            <div className="about-stat-item">
+              <span className="about-stat-number">4+</span>
+              <span className="about-stat-label">Municipal Sectors (Roads, Waste, Lights, Water)</span>
+            </div>
+            <div className="about-stat-item">
+              <span className="about-stat-number">&lt; 24h</span>
+              <span className="about-stat-label">Average Ticket Review & Queue Triage</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Us Section */}
+      <section id="contact" className="landing-contact-section">
+        <div className="landing-contact-card">
+          <div className="landing-contact-header">
+            <span className="landing-badge-pill">We’re Here To Help</span>
+            <h2>Contact Us</h2>
+            <p>
+              Have a question about using CivicFix, need administrative support, or want to deploy CivicFix in your municipal corporation? Reach out to our team below.
+            </p>
+          </div>
+
+          <div className="landing-contact-grid">
+            {/* Contact Information Cards */}
+            <div className="contact-info-col">
+              <div className="contact-info-item">
+                <div className="contact-item-icon">🏢</div>
+                <div>
+                  <h4>Municipal Operations Hub</h4>
+                  <p>CivicFix Directorate, City Infrastructure Center, Civic Center Road</p>
+                </div>
+              </div>
+
+              <div className="contact-info-item">
+                <div className="contact-item-icon">✉️</div>
+                <div>
+                  <h4>Email Support</h4>
+                  <p>
+                    General Support: <a href="mailto:support@civicfix.org">support@civicfix.org</a>
+                    <br />
+                    Authority Desk: <a href="mailto:admin@civicfix.gov">admin@civicfix.gov</a>
+                  </p>
+                </div>
+              </div>
+
+              <div className="contact-info-item">
+                <div className="contact-item-icon">📞</div>
+                <div>
+                  <h4>Toll-Free Civic Helpline</h4>
+                  <p>
+                    <a href="tel:18002484234">1800-CIVIC-FIX (1800-248-4234)</a>
+                    <br />
+                    <span>Mon - Sat: 8:00 AM - 8:00 PM</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Emergency Hazard Notice */}
+              <div className="emergency-hazard-card">
+                <span className="emergency-icon">🚨</span>
+                <div>
+                  <strong>Urgent Life-Threatening Hazards</strong>
+                  <p>
+                    For immediate emergencies like live fallen power cables, gas line leaks, or severe flooding, please call your local emergency dispatch service (911 / 112) immediately.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Contact & Feedback Form */}
+            <div className="contact-form-col">
+              <h3>Send us a Message</h3>
+              <p className="form-sub">Fill out the form below and our municipal help desk will respond within 24 hours.</p>
+
+              {contactSubmitted ? (
+                <div className="contact-success-banner">
+                  <span>✅</span>
+                  <div>
+                    <strong>Message Sent Successfully!</strong>
+                    <div style={{ fontSize: '0.84rem', marginTop: 2, opacity: 0.9 }}>
+                      Thank you for contacting CivicFix. A representative will get in touch with you shortly.
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="contact-form">
+                  <label className="field">
+                    <span className="field-label">Your Full Name</span>
+                    <input
+                      required
+                      type="text"
+                      className="form-control"
+                      placeholder="e.g. Maya Sharma"
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                    />
+                  </label>
+
+                  <label className="field">
+                    <span className="field-label">Email Address</span>
+                    <input
+                      required
+                      type="email"
+                      className="form-control"
+                      placeholder="e.g. maya@example.com"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                    />
+                  </label>
+
+                  <label className="field">
+                    <span className="field-label">Subject / Inquiry Type</span>
+                    <select
+                      className="form-control"
+                      value={contactCategory}
+                      onChange={(e) => setContactCategory(e.target.value)}
+                    >
+                      <option value="general">General Inquiry</option>
+                      <option value="citizen-support">Citizen Portal Assistance</option>
+                      <option value="admin-partnership">Municipal Authority Onboarding</option>
+                      <option value="technical">Technical Issue / Bug Report</option>
+                      <option value="feedback">Platform Feedback & Suggestions</option>
+                    </select>
+                  </label>
+
+                  <label className="field">
+                    <span className="field-label">Message Details</span>
+                    <textarea
+                      required
+                      rows={4}
+                      className="form-control"
+                      placeholder="Describe your inquiry, suggestion, or question in detail..."
+                      value={contactMessage}
+                      onChange={(e) => setContactMessage(e.target.value)}
+                    />
+                  </label>
+
+                  <button
+                    type="submit"
+                    disabled={contactSending}
+                    className="btn btn-primary btn-full"
+                    style={{ marginTop: 6 }}
+                  >
+                    {contactSending ? 'Submitting Message…' : 'Send Message →'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Comprehensive Landing Footer */}
+      <footer className="landing-footer">
+        <div className="landing-footer-inner">
+          <div className="footer-brand">
+            <h3>
+              <span className="brand-dot" /> CivicFix
+            </h3>
+            <p>
+              Transforming urban maintenance into a transparent, community-driven partnership.
+              Empowering citizens to report issues and municipal teams to resolve them faster.
+            </p>
+          </div>
+
+          <div className="footer-col">
+            <h4>Portals</h4>
+            <ul>
+              <li><Link to="/login?role=citizen">Citizen Login</Link></li>
+              <li><Link to="/register?role=citizen">Citizen Registration</Link></li>
+              <li><Link to="/login?role=admin">Admin & Authority Login</Link></li>
+              <li><Link to="/report">Report an Issue</Link></li>
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Platform</h4>
+            <ul>
+              <li><a href="#about">About CivicFix</a></li>
+              <li><a href="#workflow">How It Works</a></li>
+              <li><a href="#contact">Contact Support</a></li>
+              <li><a href="#workflow">Civic Highlights</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Community</h4>
+            <ul>
+              <li><a href="#contact">Emergency Help Desk</a></li>
+              <li><a href="#about">Public Transparency</a></li>
+              <li><a href="mailto:support@civicfix.org">support@civicfix.org</a></li>
+              <li><a href="tel:18002484234">1800-CIVIC-FIX</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="landing-footer-bottom">
+          <span>&copy; {new Date().getFullYear()} CivicFix Public Infrastructure Platform. All rights reserved.</span>
+          <span>Building cleaner, safer communities together.</span>
+        </div>
+      </footer>
 
       {/* Full-Screen Lightbox Modal */}
       {isModalOpen && (
