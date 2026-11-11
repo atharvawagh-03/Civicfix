@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { IconUser, IconShield, IconArrowRight, IconAlertTriangle } from '../components/Icons.jsx';
 
 export default function Login() {
   const { login, logout } = useAuth();
@@ -34,13 +35,12 @@ export default function Login() {
 
       if (role === 'admin' && userRole !== 'admin') {
         logout();
-        setError('Access denied: This account is registered as a Citizen. Please switch to the Citizen Login tab.');
+        setError('Access restricted: This account is registered as a Citizen. Please switch to the Citizen Portal.');
         setLoading(false);
         return;
       }
 
       if (role === 'citizen' && userRole === 'admin') {
-        // Admin logging in on citizen portal - redirect to admin
         navigate('/admin', { replace: true });
         return;
       }
@@ -48,7 +48,7 @@ export default function Login() {
       const to = userRole === 'admin' ? '/admin' : '/dashboard';
       navigate(location.state?.from?.pathname || to, { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.message || 'Authentication failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
@@ -56,12 +56,15 @@ export default function Login() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-card card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <Link to="/" style={{ color: 'var(--muted)', fontSize: '0.85rem', textDecoration: 'none' }}>
-            ← Back to Home
+      <div className="auth-card card" style={{ maxWidth: 440 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <Link to="/" style={{ color: 'var(--muted)', fontSize: '0.82rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span>&larr;</span>
+            <span>Back to Platform</span>
           </Link>
-          <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>CivicFix Portal</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+            CivicFix Identity
+          </span>
         </div>
 
         {/* Role Toggle Tabs */}
@@ -74,7 +77,8 @@ export default function Login() {
               setError('');
             }}
           >
-            👤 Citizen Login
+            <IconUser size={15} />
+            <span>Citizen Portal</span>
           </button>
           <button
             type="button"
@@ -84,42 +88,44 @@ export default function Login() {
               setError('');
             }}
           >
-            🛡️ Admin Login
+            <IconShield size={15} />
+            <span>Admin Console</span>
           </button>
         </div>
 
-        {/* Role Portal Banner */}
+        {/* Role Context Notification */}
         {role === 'citizen' ? (
           <div className="role-portal-banner citizen">
-            <span>👤</span>
+            <IconUser size={18} style={{ flexShrink: 0, marginTop: 1 }} />
             <div>
-              <strong>Citizen Sign In</strong>
+              <strong>Citizen Reporting Access</strong>
               <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
-                Report civic problems with photos, GPS, and track repair lifecycle in real time.
+                Submit civic defects, attach geo-tagged photos, and monitor repair status.
               </div>
             </div>
           </div>
         ) : (
           <div className="role-portal-banner admin">
-            <span>🛡️</span>
+            <IconShield size={18} style={{ flexShrink: 0, marginTop: 1 }} />
             <div>
-              <strong>Municipal Authority Sign In</strong>
+              <strong>Municipal Authority Console</strong>
               <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
-                Restricted access for city supervisors, engineers, and municipal field crew dispatch.
+                Restricted access for city supervisors, engineers, and field workforce dispatch.
               </div>
             </div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {error && (
-            <div style={{ color: 'var(--danger)', fontSize: '0.92rem', fontWeight: 700, padding: '8px 10px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.3)' }} role="alert">
-              {error}
+            <div style={{ color: '#fca5a5', fontSize: '0.88rem', padding: '10px 12px', background: 'rgba(239, 68, 68, 0.12)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'flex-start', gap: 8 }} role="alert">
+              <IconAlertTriangle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
+              <span>{error}</span>
             </div>
           )}
 
           <label className="field">
-            <span className="field-label">Email address</span>
+            <span className="field-label">Official Email Address</span>
             <input
               className="form-control"
               type="email"
@@ -127,7 +133,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              placeholder={role === 'admin' ? 'admin@civicfix.gov' : 'citizen@example.com'}
+              placeholder={role === 'admin' ? 'admin@municipality.gov' : 'resident@example.com'}
             />
           </label>
 
@@ -150,26 +156,26 @@ export default function Login() {
             className={`btn ${role === 'admin' ? 'btn-admin' : 'btn-primary'}`}
             style={{ marginTop: 8 }}
           >
-            {loading ? 'Authenticating…' : (role === 'admin' ? 'Sign in to Admin Dashboard →' : 'Sign in to Citizen Portal →')}
+            {loading ? 'Authenticating…' : (role === 'admin' ? 'Sign in to Authority Console' : 'Sign in to Citizen Portal')}
           </button>
         </form>
 
-        <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.88rem' }}>
+        <div style={{ marginTop: '1.4rem', paddingTop: '1.2rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
           {role === 'citizen' ? (
             <p style={{ margin: 0 }}>
-              Don't have an account? <Link to="/register?role=citizen">Register as Citizen</Link>
+              Need an account? <Link to="/register?role=citizen" style={{ color: '#38bdf8' }}>Register as Citizen</Link>
             </p>
           ) : (
-            <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.82rem' }}>
-              🔒 Authorized staff accounts only. Contact city IT for access.
+            <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.8rem' }}>
+              Secured session. Access audited.
             </p>
           )}
 
           <Link
             to={role === 'admin' ? '/login?role=citizen' : '/login?role=admin'}
-            style={{ color: '#93c5fd', textDecoration: 'none', fontSize: '0.82rem' }}
+            style={{ color: 'var(--muted)', textDecoration: 'none', fontSize: '0.8rem' }}
           >
-            Switch to {role === 'admin' ? 'Citizen' : 'Admin'} →
+            Switch to {role === 'admin' ? 'Citizen' : 'Admin'} &rarr;
           </Link>
         </div>
       </div>

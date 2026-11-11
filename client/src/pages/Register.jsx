@@ -109,8 +109,8 @@ export default function Register() {
           <label className="field">
             <span className="field-label">Account Type / Portal</span>
             <select value={role} onChange={(e) => setRole(e.target.value)} className="form-control">
-              <option value="citizen">👤 Citizen (Report & track civic issues)</option>
-              <option value="admin">🛡️ Admin (Municipal authority & field supervisor)</option>
+              <option value="citizen">Citizen (Resident reporting & tracking)</option>
+              <option value="admin">Administrator (Municipal staff & supervisor)</option>
             </select>
           </label>
 

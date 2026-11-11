@@ -1,7 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import civicHeroImg from '../assets/civic-hero.jpg';
+import {
+  IconUser,
+  IconShield,
+  IconCamera,
+  IconPin,
+  IconTruck,
+  IconCheckCircle,
+  IconBuilding,
+  IconMail,
+  IconPhone,
+  IconAlertTriangle,
+  IconArrowRight,
+  IconLayers,
+  IconCheck,
+} from '../components/Icons.jsx';
 
 export default function Landing() {
   const { user, logout } = useAuth();
@@ -15,420 +30,473 @@ export default function Landing() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactSending, setContactSending] = useState(false);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    const elements = document.querySelectorAll('.reveal-on-scroll');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   function handleContactSubmit(e) {
     e.preventDefault();
     setContactSending(true);
-    // Simulate swift submission handling
     setTimeout(() => {
       setContactSending(false);
       setContactSubmitted(true);
       setContactName('');
       setContactEmail('');
       setContactMessage('');
-    }, 600);
+    }, 450);
   }
 
   return (
-    <div className="landing-fullscreen-shell">
-      {/* Full-Screen Hero Visual Backdrop */}
-      <div className="landing-hero-backdrop">
-        <img
-          src={civicHeroImg}
-          alt="CivicFix: Citizen reporting an issue while municipal crews repair roads and streetlights"
-          className="landing-fullscreen-img"
-        />
-        <div className="landing-backdrop-overlay" />
-      </div>
+    <div className="landing-shell-designed">
+      {/* Background Atmosphere: Controlled Scrim */}
+      <div className="landing-ambient-layer" />
 
-      {/* Floating Top Navbar with Navigation Links & Separate Portals */}
-      <header className="landing-nav-floating">
-        <div className="landing-brand">
-          <span className="brand-dot" /> CivicFix
-        </div>
+      {/* Primary Top Header */}
+      <header className="landing-header-clean">
+        <div className="landing-header-inner">
+          <div className="brand-group">
+            <span className="brand-symbol" />
+            <span className="brand-name">CivicFix</span>
+            <span className="brand-version-badge">Operations 2.0</span>
+          </div>
 
-        {/* Anchor Navigation Links */}
-        <nav className="landing-nav-links">
-          <a href="#about" className="landing-nav-link">About</a>
-          <a href="#workflow" className="landing-nav-link">How It Works</a>
-          <a href="#contact" className="landing-nav-link">Contact Us</a>
-        </nav>
+          <nav className="nav-menu">
+            <a href="#how-it-works" className="nav-menu-link">How It Works</a>
+            <a href="#about" className="nav-menu-link">Architecture</a>
+            <a href="#contact" className="nav-menu-link">Municipal Contact</a>
+          </nav>
 
-        <div className="landing-nav-actions">
-          {user && (
-            <div className="user-status-pill">
-              <span>Signed in as:</span>
-              <strong>{user.name} ({user.role})</strong>
-              <button
-                type="button"
-                onClick={logout}
-                className="btn btn-ghost"
-                style={{ padding: '2px 8px', fontSize: '0.75rem', borderRadius: '6px' }}
-                title="Sign out of current account"
-              >
-                Log out
-              </button>
-            </div>
-          )}
+          <div className="nav-actions-group">
+            {user && (
+              <div className="session-status-badge">
+                <span className="status-indicator-dot" />
+                <span className="session-user-name">{user.name}</span>
+                <span className="session-role-pill">{user.role}</span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="btn-link-action"
+                  title="Sign out of current account"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
 
-          {/* Explicit Separate Logins */}
-          <Link to="/login?role=citizen" className="btn btn-primary" title="Citizen portal login">
-            👤 Citizen Login
-          </Link>
+            <Link to="/login?role=citizen" className="btn-nav-citizen">
+              <IconUser size={15} />
+              <span>Citizen Portal</span>
+            </Link>
 
-          <Link to="/login?role=admin" className="btn btn-admin" title="Admin authority login">
-            🛡️ Admin Login
-          </Link>
+            <Link to="/login?role=admin" className="btn-nav-admin">
+              <IconShield size={15} />
+              <span>Admin Portal</span>
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Hero Content Floating Over Full-Screen Visual */}
-      <main className="landing-fullscreen-content">
-        <div className="landing-hero-card">
-          <div className="landing-badge-pill">
-            <span className="live-dot" /> Public Issue Reporting & Resolution Platform
+      {/* Hero Section: Engineered for Clarity & Utility */}
+      <section className="hero-section-designed">
+        <div className="hero-container">
+          <div className="hero-headline-block">
+            <div className="kicker-badge">
+              <span className="kicker-status-indicator" />
+              <span>Public Infrastructure & Hazard Management</span>
+            </div>
+
+            <h1 className="hero-title">
+              Fix city problems faster.
+              <br />
+              <span className="hero-title-secondary">Track every street repair live.</span>
+            </h1>
+
+            <p className="hero-lead">
+              CivicFix bridges municipal authorities and residents. Capture potholes,
+              damaged lighting, and sanitation hazards with auto-detected GPS location —
+              then monitor maintenance crews as repairs are dispatched and resolved in real time.
+            </p>
           </div>
 
-          <h1>Report city problems in seconds. Track every fix in real time.</h1>
-
-          <p className="landing-sub">
-            CivicFix connects citizens directly to municipal authorities. Snap a photo of a pothole,
-            garbage pile, or street hazard with automatic GPS location — and watch city crews repair and resolve it live.
-          </p>
-
-          {/* Separate Portals for Citizen & Admin */}
-          <div className="landing-portals-grid">
-            {/* Citizen Access Portal */}
-            <div className="portal-access-card citizen-portal">
-              <div>
-                <div className="portal-card-header">
-                  <div className="portal-icon-badge">👤</div>
-                  <div>
-                    <h3>Citizen Portal</h3>
-                    <span>For Residents & Public</span>
-                  </div>
+          {/* Dedicated Login Gateways */}
+          <div className="portals-grid-designed">
+            {/* Citizen Gateway */}
+            <div className="portal-card-designed portal-citizen">
+              <div className="portal-top">
+                <div className="portal-icon-box citizen-accent">
+                  <IconUser size={20} />
                 </div>
-                <p className="portal-card-desc" style={{ marginTop: '0.75rem' }}>
-                  Report potholes, waste, and hazards with photo upload & live GPS. Track resolution milestones in real time.
-                </p>
+                <div>
+                  <h3 className="portal-heading">Citizen Reporting</h3>
+                  <span className="portal-meta">Public resident portal</span>
+                </div>
               </div>
 
-              <div className="portal-actions">
-                <Link to="/login?role=citizen" className="btn btn-primary btn-lg btn-full">
-                  Citizen Login →
+              <p className="portal-description">
+                Submit street defects, upload photographic evidence, and track status milestones directly from your smartphone.
+              </p>
+
+              <div className="portal-action-block">
+                <Link to="/login?role=citizen" className="btn-portal btn-citizen-primary">
+                  <span>Sign in as Citizen</span>
+                  <IconArrowRight size={16} />
                 </Link>
-                <Link to="/register?role=citizen" className="portal-sub-link">
-                  New citizen? Register here
+                <Link to="/register?role=citizen" className="portal-secondary-link">
+                  New resident? Register an account
                 </Link>
               </div>
             </div>
 
-            {/* Admin Access Portal */}
-            <div className="portal-access-card admin-portal">
-              <div>
-                <div className="portal-card-header">
-                  <div className="portal-icon-badge">🛡️</div>
-                  <div>
-                    <h3>Admin & Authority</h3>
-                    <span>Municipal Staff & Supervisors</span>
-                  </div>
+            {/* Admin / Authority Gateway */}
+            <div className="portal-card-designed portal-admin">
+              <div className="portal-top">
+                <div className="portal-icon-box admin-accent">
+                  <IconShield size={20} />
                 </div>
-                <p className="portal-card-desc" style={{ marginTop: '0.75rem' }}>
-                  Access municipal queues, assign maintenance crews & road rollers, update statuses, and verify completed fixes.
-                </p>
+                <div>
+                  <h3 className="portal-heading">Municipal Operations</h3>
+                  <span className="portal-meta">City engineers & dispatchers</span>
+                </div>
               </div>
 
-              <div className="portal-actions">
-                <Link to="/login?role=admin" className="btn btn-admin btn-lg btn-full">
-                  Admin Login →
+              <p className="portal-description">
+                Manage ticket triage, deploy asphalt machinery and field crews, update repair timelines, and verify completion photos.
+              </p>
+
+              <div className="portal-action-block">
+                <Link to="/login?role=admin" className="btn-portal btn-admin-primary">
+                  <span>Sign in as Administrator</span>
+                  <IconArrowRight size={16} />
                 </Link>
-                <div className="portal-secure-badge">
-                  <span>🔒 Authorized Municipal Personnel</span>
+                <div className="portal-institutional-tag">
+                  <IconShield size={13} />
+                  <span>Authorized Municipal Staff Only</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Platform Feature Stats */}
-          <div className="landing-stats-row">
-            <div className="landing-stat-box">
-              <span className="stat-icon">📸</span>
+          {/* Quick Telemetry Row */}
+          <div className="hero-telemetry-row">
+            <div className="telemetry-cell">
+              <IconCamera size={18} className="cell-icon" />
               <div>
-                <strong>Photo + GPS</strong>
-                <span>Instant geo-tagged report</span>
+                <strong>Photo + GPS Coordinate</strong>
+                <span>Instant geo-stamped report</span>
               </div>
             </div>
-            <div className="landing-stat-box">
-              <span className="stat-icon">🚜</span>
+
+            <div className="telemetry-cell">
+              <IconTruck size={18} className="cell-icon" />
               <div>
-                <strong>Field Crew Dispatch</strong>
-                <span>Road, lighting & sanitation</span>
+                <strong>Workforce Dispatch</strong>
+                <span>Machinery & repair crews</span>
               </div>
             </div>
-            <div className="landing-stat-box">
-              <span className="stat-icon">🔄</span>
+
+            <div className="telemetry-cell">
+              <IconCheckCircle size={18} className="cell-icon" />
               <div>
-                <strong>Live Progress</strong>
+                <strong>Auditable Progression</strong>
                 <span>Pending → In Progress → Resolved</span>
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </section>
 
-      {/* Full-Width Showcase & Workflow Section */}
-      <section id="workflow" className="landing-workflow-section">
-        <div className="landing-workflow-card">
-          <div className="landing-workflow-header">
-            <span className="landing-badge-pill">Complete Community Workflow</span>
-            <h2>From Citizen Report to Real-World Fix</h2>
-            <p>
-              CivicFix transforms civic maintenance into a collaborative, transparent experience for everyone in the city.
-            </p>
-          </div>
+      {/* Visual Canvas: Framed Live Operations Window */}
+      <section id="how-it-works" className="operations-monitor-section">
+        <div className="operations-monitor-container reveal-on-scroll">
+          <div className="window-frame">
+            <div className="window-chrome-bar">
+              <div className="window-controls">
+                <span className="window-circle" />
+                <span className="window-circle" />
+                <span className="window-circle" />
+              </div>
+              <div className="window-title-tag">
+                LIVE MUNICIPAL OPERATIONS FEED &mdash; METROPOLITAN SECTOR
+              </div>
+              <div className="window-status-pill">
+                <span className="status-live-dot" />
+                <span>FIELD TEAMS ACTIVE</span>
+              </div>
+            </div>
 
-          <div
-            className="landing-full-image-container"
-            onClick={() => setIsModalOpen(true)}
-            title="Click to view high-resolution full-screen image"
-          >
-            <img
-              src={civicHeroImg}
-              alt="CivicFix full panoramic illustration showing citizen reporting and crews repairing city streets"
-            />
-            <div className="landing-image-expand-hint">
-              ⛶ Click to expand full size
+            <div
+              className="window-canvas-wrapper"
+              onClick={() => setIsModalOpen(true)}
+              title="Click to view full-resolution city infrastructure overview"
+            >
+              <img
+                src={civicHeroImg}
+                alt="CivicFix operations overview showing citizen reporting and municipal road repair crews"
+                className="window-canvas-img"
+              />
+              <div className="window-canvas-overlay-hint">
+                <span>View Full Resolution</span>
+              </div>
             </div>
           </div>
 
-          <div className="landing-workflow-grid">
-            <div className="landing-workflow-item">
-              <span className="landing-workflow-icon">📸</span>
-              <h4>1. Citizen Portal: Spot & Report</h4>
-              <p>
-                Citizens snap a photo of any issue with exact GPS location in seconds. Automatic ticket creation.
+          {/* 3-Stage Resolution Pipeline */}
+          <div className="pipeline-stages-grid">
+            <div className="pipeline-card reveal-on-scroll delay-1">
+              <div className="pipeline-number">01</div>
+              <h4 className="pipeline-title">Spot & Document</h4>
+              <p className="pipeline-desc">
+                Citizens photograph road defects, overflowing waste, or broken streetlights. The client detects GPS coordinates automatically.
               </p>
+              <div className="pipeline-badge">Citizen Action</div>
             </div>
 
-            <div className="landing-workflow-item">
-              <span className="landing-workflow-icon">🚜</span>
-              <h4>2. Admin Portal: Dispatch & Repair</h4>
-              <p>
-                Municipal supervisors review the ticket, assign road rollers and technicians, and begin active work.
+            <div className="pipeline-card reveal-on-scroll delay-2">
+              <div className="pipeline-number">02</div>
+              <h4 className="pipeline-title">Triage & Dispatch</h4>
+              <p className="pipeline-desc">
+                Municipal administrators review incoming tickets, categorize hazard severity, and dispatch specialized equipment and repair technicians.
               </p>
+              <div className="pipeline-badge">Authority Action</div>
             </div>
 
-            <div className="landing-workflow-item">
-              <span className="landing-workflow-icon">✨</span>
-              <h4>3. Verified Resolution</h4>
-              <p>
-                Repairs are verified with photo proof, and the status changes to Resolved live for all neighbors to see.
+            <div className="pipeline-card reveal-on-scroll delay-3">
+              <div className="pipeline-number">03</div>
+              <h4 className="pipeline-title">Resolution & Audit</h4>
+              <p className="pipeline-desc">
+                Upon job completion, crews upload verification photos. Status transitions to Resolved live on the public transparency map.
               </p>
+              <div className="pipeline-badge">Verified Resolution</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Us Section */}
-      <section id="about" className="landing-about-section">
-        <div className="landing-about-card">
-          <div className="landing-about-header">
-            <span className="landing-badge-pill">Who We Are & What We Do</span>
-            <h2>About CivicFix</h2>
-            <p>
-              CivicFix is a modern public infrastructure management platform designed to eliminate the barrier
-              between city residents and municipal maintenance departments. We empower every citizen to be the eyes of their city,
-              ensuring public streets, lighting, sanitation, and utilities are fixed swiftly and transparently.
+      {/* Architecture & Institutional Accountability Section */}
+      <section id="about" className="institutional-section">
+        <div className="institutional-container reveal-on-scroll">
+          <div className="section-header-block">
+            <div className="section-kicker">INSTITUTIONAL ARCHITECTURE</div>
+            <h2 className="section-title">Designed for public accountability</h2>
+            <p className="section-subtitle">
+              Traditional municipal reporting gets lost in bureaucratic queues. CivicFix establishes an open,
+              auditable pipeline where every citizen report is treated as a verifiable work ticket.
             </p>
           </div>
 
-          <div className="landing-about-pillars">
-            <div className="about-pillar-card">
-              <div className="pillar-icon-wrap">🛡️</div>
-              <h4>Radical Transparency</h4>
+          <div className="pillars-grid-designed">
+            <div className="pillar-item reveal-on-scroll delay-1">
+              <div className="pillar-icon">
+                <IconShield size={20} />
+              </div>
+              <h4>Public Audit Trail</h4>
               <p>
-                No more lost complaints or bureaucratic black holes. Every ticket is publicly tracked with timestamped status changes from Pending to In Progress to Resolved.
+                Every status update is immutable and timestamped. Progress cannot be marked completed without photographic resolution evidence.
               </p>
             </div>
 
-            <div className="about-pillar-card">
-              <div className="pillar-icon-wrap">📍</div>
-              <h4>Precise Geo-Tagging</h4>
+            <div className="pillar-item reveal-on-scroll delay-2">
+              <div className="pillar-icon">
+                <IconPin size={20} />
+              </div>
+              <h4>Precision Geo-Location</h4>
               <p>
-                Interactive maps and GPS coordinates ensure municipal teams know the exact pothole, broken streetlight, or illegal dump site without guessing.
+                Integrated mapping ensures maintenance contractors arrive at the exact meter of the defect, reducing search delays.
               </p>
             </div>
 
-            <div className="about-pillar-card">
-              <div className="pillar-icon-wrap">🚜</div>
-              <h4>Direct Municipal Dispatch</h4>
+            <div className="pillar-item reveal-on-scroll delay-3">
+              <div className="pillar-icon">
+                <IconTruck size={20} />
+              </div>
+              <h4>Departmental Queue Control</h4>
               <p>
-                Authorities have access to tailored queue filters, severity indicators, and machinery assignment tools to dispatch field crews where they are needed most.
+                Filter tickets by sanitation, civil roadway, electrical, or drainage departments with dedicated role-based administration.
               </p>
             </div>
 
-            <div className="about-pillar-card">
-              <div className="pillar-icon-wrap">🤝</div>
-              <h4>Community Collaboration</h4>
+            <div className="pillar-item reveal-on-scroll delay-4">
+              <div className="pillar-icon">
+                <IconLayers size={20} />
+              </div>
+              <h4>Multi-Tenant Ward Scaling</h4>
               <p>
-                When citizens and authorities work together, neighborhoods become cleaner, safer, and more resilient. CivicFix gives community members a direct stake in urban upkeep.
+                Architected to operate across multiple city wards, metropolitan regions, or local councils with centralized reporting metrics.
               </p>
             </div>
           </div>
 
-          <div className="landing-about-stats">
-            <div className="about-stat-item">
-              <span className="about-stat-number">100%</span>
-              <span className="about-stat-label">Real-Time Tracking Transparency</span>
+          {/* Performance & Operating Benchmarks */}
+          <div className="metrics-strip reveal-on-scroll delay-2">
+            <div className="metric-cell">
+              <span className="metric-val">100%</span>
+              <span className="metric-lbl">Auditable Ticket Lifecycle</span>
             </div>
-            <div className="about-stat-item">
-              <span className="about-stat-number">24/7</span>
-              <span className="about-stat-label">Citizen Reporting Accessibility</span>
+            <div className="metric-cell">
+              <span className="metric-val">24/7</span>
+              <span className="metric-lbl">Intake & Coordinate Logging</span>
             </div>
-            <div className="about-stat-item">
-              <span className="about-stat-number">4+</span>
-              <span className="about-stat-label">Municipal Sectors (Roads, Waste, Lights, Water)</span>
+            <div className="metric-cell">
+              <span className="metric-val">4+</span>
+              <span className="metric-lbl">Civil Infrastructure Sectors</span>
             </div>
-            <div className="about-stat-item">
-              <span className="about-stat-number">&lt; 24h</span>
-              <span className="about-stat-label">Average Ticket Review & Queue Triage</span>
+            <div className="metric-cell">
+              <span className="metric-val">&lt; 24h</span>
+              <span className="metric-lbl">Target Initial Triage SLA</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Us Section */}
-      <section id="contact" className="landing-contact-section">
-        <div className="landing-contact-card">
-          <div className="landing-contact-header">
-            <span className="landing-badge-pill">We’re Here To Help</span>
-            <h2>Contact Us</h2>
-            <p>
-              Have a question about using CivicFix, need administrative support, or want to deploy CivicFix in your municipal corporation? Reach out to our team below.
+      {/* Municipal Contact & Liaison Section */}
+      <section id="contact" className="contact-section-designed">
+        <div className="contact-container reveal-on-scroll">
+          <div className="section-header-block">
+            <div className="section-kicker">MUNICIPAL SUPPORT & LIAISON</div>
+            <h2 className="section-title">Contact Operations</h2>
+            <p className="section-subtitle">
+              Inquiries regarding platform onboarding, administrative access, or municipal partnerships.
             </p>
           </div>
 
-          <div className="landing-contact-grid">
-            {/* Contact Information Cards */}
-            <div className="contact-info-col">
-              <div className="contact-info-item">
-                <div className="contact-item-icon">🏢</div>
+          <div className="contact-layout-split">
+            {/* Institutional Information */}
+            <div className="contact-info-panel reveal-on-scroll delay-1">
+              <div className="info-entry">
+                <div className="info-entry-icon">
+                  <IconBuilding size={18} />
+                </div>
                 <div>
-                  <h4>Municipal Operations Hub</h4>
-                  <p>CivicFix Directorate, City Infrastructure Center, Civic Center Road</p>
+                  <h4>Operations Directorate</h4>
+                  <p>Municipal Infrastructure Directorate, City Civil Center, Suite 400</p>
                 </div>
               </div>
 
-              <div className="contact-info-item">
-                <div className="contact-item-icon">✉️</div>
+              <div className="info-entry">
+                <div className="info-entry-icon">
+                  <IconMail size={18} />
+                </div>
                 <div>
-                  <h4>Email Support</h4>
+                  <h4>Electronic Inquiries</h4>
                   <p>
-                    General Support: <a href="mailto:support@civicfix.org">support@civicfix.org</a>
+                    General Help Desk: <a href="mailto:support@civicfix.org">support@civicfix.org</a>
                     <br />
-                    Authority Desk: <a href="mailto:admin@civicfix.gov">admin@civicfix.gov</a>
+                    Authority Liaison: <a href="mailto:admin@civicfix.gov">admin@civicfix.gov</a>
                   </p>
                 </div>
               </div>
 
-              <div className="contact-info-item">
-                <div className="contact-item-icon">📞</div>
+              <div className="info-entry">
+                <div className="info-entry-icon">
+                  <IconPhone size={18} />
+                </div>
                 <div>
-                  <h4>Toll-Free Civic Helpline</h4>
+                  <h4>Public Helpline</h4>
                   <p>
                     <a href="tel:18002484234">1800-CIVIC-FIX (1800-248-4234)</a>
                     <br />
-                    <span>Mon - Sat: 8:00 AM - 8:00 PM</span>
+                    <span className="subtext">Operating Hours: Mon &ndash; Sat, 08:00 &ndash; 20:00</span>
                   </p>
                 </div>
               </div>
 
-              {/* Emergency Hazard Notice */}
-              <div className="emergency-hazard-card">
-                <span className="emergency-icon">🚨</span>
+              {/* Protocol Advisory for Hazards */}
+              <div className="emergency-advisory-box">
+                <IconAlertTriangle size={20} className="emergency-icon-svg" />
                 <div>
-                  <strong>Urgent Life-Threatening Hazards</strong>
+                  <strong>Critical Hazard Protocol</strong>
                   <p>
-                    For immediate emergencies like live fallen power cables, gas line leaks, or severe flooding, please call your local emergency dispatch service (911 / 112) immediately.
+                    For active life-threatening emergencies (e.g. fallen high-voltage cables, open gas mains, or structural collapse), contact emergency services (911 / 112) immediately.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Interactive Contact & Feedback Form */}
-            <div className="contact-form-col">
-              <h3>Send us a Message</h3>
-              <p className="form-sub">Fill out the form below and our municipal help desk will respond within 24 hours.</p>
+            {/* Direct Contact Form */}
+            <div className="contact-form-panel reveal-on-scroll delay-2">
+              <h3 className="form-panel-title">Submit Inquiry</h3>
+              <p className="form-panel-sub">Official communication dispatch. Response within one business day.</p>
 
               {contactSubmitted ? (
-                <div className="contact-success-banner">
-                  <span>✅</span>
+                <div className="submission-success-card">
+                  <IconCheck size={20} className="success-icon-svg" />
                   <div>
-                    <strong>Message Sent Successfully!</strong>
-                    <div style={{ fontSize: '0.84rem', marginTop: 2, opacity: 0.9 }}>
-                      Thank you for contacting CivicFix. A representative will get in touch with you shortly.
-                    </div>
+                    <strong>Inquiry Received</strong>
+                    <p>Your communication has been dispatched to the municipal desk. Reference ID generated.</p>
                   </div>
                 </div>
               ) : (
-                <form onSubmit={handleContactSubmit} className="contact-form">
-                  <label className="field">
-                    <span className="field-label">Your Full Name</span>
+                <form onSubmit={handleContactSubmit} className="contact-form-designed">
+                  <div className="form-field-group">
+                    <label className="field-label">Full Name</label>
                     <input
                       required
                       type="text"
-                      className="form-control"
-                      placeholder="e.g. Maya Sharma"
+                      className="text-input-clean"
+                      placeholder="e.g. Elena Rostova"
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                     />
-                  </label>
+                  </div>
 
-                  <label className="field">
-                    <span className="field-label">Email Address</span>
+                  <div className="form-field-group">
+                    <label className="field-label">Email Address</label>
                     <input
                       required
                       type="email"
-                      className="form-control"
-                      placeholder="e.g. maya@example.com"
+                      className="text-input-clean"
+                      placeholder="e.g. elena@municipality.gov"
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
                     />
-                  </label>
+                  </div>
 
-                  <label className="field">
-                    <span className="field-label">Subject / Inquiry Type</span>
+                  <div className="form-field-group">
+                    <label className="field-label">Department / Inquiry Category</label>
                     <select
-                      className="form-control"
+                      className="select-input-clean"
                       value={contactCategory}
                       onChange={(e) => setContactCategory(e.target.value)}
                     >
-                      <option value="general">General Inquiry</option>
-                      <option value="citizen-support">Citizen Portal Assistance</option>
-                      <option value="admin-partnership">Municipal Authority Onboarding</option>
-                      <option value="technical">Technical Issue / Bug Report</option>
-                      <option value="feedback">Platform Feedback & Suggestions</option>
+                      <option value="general">General Operations Inquiry</option>
+                      <option value="citizen-support">Resident Portal Support</option>
+                      <option value="admin-partnership">Municipal Integration / Ward Deployment</option>
+                      <option value="technical">Technical Report / Defect</option>
                     </select>
-                  </label>
+                  </div>
 
-                  <label className="field">
-                    <span className="field-label">Message Details</span>
+                  <div className="form-field-group">
+                    <label className="field-label">Message Specification</label>
                     <textarea
                       required
                       rows={4}
-                      className="form-control"
-                      placeholder="Describe your inquiry, suggestion, or question in detail..."
+                      className="textarea-input-clean"
+                      placeholder="Provide detailed description of the inquiry or requirement..."
                       value={contactMessage}
                       onChange={(e) => setContactMessage(e.target.value)}
                     />
-                  </label>
+                  </div>
 
                   <button
                     type="submit"
                     disabled={contactSending}
-                    className="btn btn-primary btn-full"
-                    style={{ marginTop: 6 }}
+                    className="btn-submit-action"
                   >
-                    {contactSending ? 'Submitting Message…' : 'Send Message →'}
+                    {contactSending ? 'Dispatching…' : 'Submit Communication'}
                   </button>
                 </form>
               )}
@@ -437,76 +505,77 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Comprehensive Landing Footer */}
-      <footer className="landing-footer">
-        <div className="landing-footer-inner">
-          <div className="footer-brand">
-            <h3>
-              <span className="brand-dot" /> CivicFix
-            </h3>
-            <p>
-              Transforming urban maintenance into a transparent, community-driven partnership.
-              Empowering citizens to report issues and municipal teams to resolve them faster.
+      {/* Institutional Platform Footer */}
+      <footer className="designed-footer">
+        <div className="designed-footer-inner">
+          <div className="footer-brand-col">
+            <div className="brand-group">
+              <span className="brand-symbol" />
+              <span className="brand-name">CivicFix</span>
+            </div>
+            <p className="footer-tagline">
+              Civil infrastructure tracking & municipal field dispatch framework.
+              Built for transparent public accountability.
             </p>
           </div>
 
-          <div className="footer-col">
-            <h4>Portals</h4>
+          <div className="footer-nav-col">
+            <h4>Access Portals</h4>
             <ul>
-              <li><Link to="/login?role=citizen">Citizen Login</Link></li>
-              <li><Link to="/register?role=citizen">Citizen Registration</Link></li>
-              <li><Link to="/login?role=admin">Admin & Authority Login</Link></li>
-              <li><Link to="/report">Report an Issue</Link></li>
+              <li><Link to="/login?role=citizen">Citizen Reporting</Link></li>
+              <li><Link to="/register?role=citizen">Resident Registration</Link></li>
+              <li><Link to="/login?role=admin">Authority Console</Link></li>
             </ul>
           </div>
 
-          <div className="footer-col">
-            <h4>Platform</h4>
+          <div className="footer-nav-col">
+            <h4>Specifications</h4>
             <ul>
-              <li><a href="#about">About CivicFix</a></li>
-              <li><a href="#workflow">How It Works</a></li>
-              <li><a href="#contact">Contact Support</a></li>
-              <li><a href="#workflow">Civic Highlights</a></li>
+              <li><a href="#how-it-works">Pipeline Architecture</a></li>
+              <li><a href="#about">Verification Standards</a></li>
+              <li><a href="#contact">Emergency Protocols</a></li>
             </ul>
           </div>
 
-          <div className="footer-col">
-            <h4>Community</h4>
+          <div className="footer-nav-col">
+            <h4>Administration</h4>
             <ul>
-              <li><a href="#contact">Emergency Help Desk</a></li>
-              <li><a href="#about">Public Transparency</a></li>
               <li><a href="mailto:support@civicfix.org">support@civicfix.org</a></li>
               <li><a href="tel:18002484234">1800-CIVIC-FIX</a></li>
+              <li><span>Civic Center, Suite 400</span></li>
             </ul>
           </div>
         </div>
 
-        <div className="landing-footer-bottom">
-          <span>&copy; {new Date().getFullYear()} CivicFix Public Infrastructure Platform. All rights reserved.</span>
-          <span>Building cleaner, safer communities together.</span>
+        <div className="designed-footer-bottom">
+          <span>&copy; {new Date().getFullYear()} CivicFix Municipal Platform. Open Public Operations.</span>
+          <span className="footer-compliance-text">Audited Municipal Framework &bull; Verified Dispatch</span>
         </div>
       </footer>
 
-      {/* Full-Screen Lightbox Modal */}
+      {/* Lightbox Modal */}
       {isModalOpen && (
         <div
-          className="image-modal-backdrop"
+          className="modal-lightbox-backdrop"
           onClick={() => setIsModalOpen(false)}
           role="dialog"
           aria-modal="true"
         >
-          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="image-modal-close"
-              onClick={() => setIsModalOpen(false)}
-              aria-label="Close"
-            >
-              ✕
-            </button>
+          <div className="modal-lightbox-panel" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-lightbox-header">
+              <span>Civic Infrastructure Overview &mdash; Real-Time Urban Resolution</span>
+              <button
+                className="btn-modal-close"
+                onClick={() => setIsModalOpen(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
             <img
               src={civicHeroImg}
-              alt="CivicFix Fullscreen City Action Illustration"
-              className="image-modal-full"
+              alt="CivicFix Fullscreen View"
+              className="modal-lightbox-image"
             />
           </div>
         </div>
