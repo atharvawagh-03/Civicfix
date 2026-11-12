@@ -46,9 +46,11 @@ export default function ChatBot() {
   return (
     <>
       <button 
-        className="chatbot-toggle-btn btn btn-primary"
+        type="button"
+        className="chatbot-toggle-btn"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle chat bot"
+        title="CivicFix AI Assistant"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           {isOpen ? (
@@ -62,7 +64,18 @@ export default function ChatBot() {
       {isOpen && (
         <div className="chatbot-window card">
           <div className="chatbot-header">
-            <strong>CivicFix Assistant</strong>
+            <div className="chatbot-header-info">
+              <span className="chatbot-status-dot" />
+              <strong>CivicFix AI Assistant</strong>
+            </div>
+            <button
+              type="button"
+              className="chatbot-close-btn"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close chat"
+            >
+              &times;
+            </button>
           </div>
           
           <div className="chatbot-messages">
@@ -83,7 +96,7 @@ export default function ChatBot() {
             <input 
               type="text" 
               className="form-control" 
-              placeholder="Type a message..." 
+              placeholder="Ask about reporting, tracking, status..." 
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               disabled={loading}
