@@ -2,6 +2,12 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Default city center: Nashik, Maharashtra
+export const NASHIK_COORDINATES = {
+  lat: 19.9975,
+  lng: 73.7898,
+};
+
 const defaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -20,8 +26,8 @@ function MapClick({ onPick }) {
 }
 
 export function LocationPickerMap({ latitude, longitude, onChange }) {
-  const lat = latitude ?? 28.6139;
-  const lng = longitude ?? 77.209;
+  const lat = latitude ?? NASHIK_COORDINATES.lat;
+  const lng = longitude ?? NASHIK_COORDINATES.lng;
   return (
     <MapContainer
       center={[lat, lng]}
@@ -45,17 +51,23 @@ export function LocationPickerMap({ latitude, longitude, onChange }) {
 }
 
 export function IssueMap({ latitude, longitude, title }) {
+  const hasCoords = latitude != null && longitude != null && (latitude !== 0 || longitude !== 0);
+  const lat = hasCoords ? latitude : NASHIK_COORDINATES.lat;
+  const lng = hasCoords ? longitude : NASHIK_COORDINATES.lng;
+
   return (
     <MapContainer
-      center={[latitude, longitude]}
-      zoom={15}
+      center={[lat, lng]}
+      zoom={hasCoords ? 15 : 12}
       style={{ height: 260, width: '100%', borderRadius: 8 }}
       scrollWheelZoom={false}
     >
       <TileLayer attribution="&copy; OpenStreetMap" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={[latitude, longitude]} icon={defaultIcon}>
-        <Popup>{title}</Popup>
-      </Marker>
+      {hasCoords && (
+        <Marker position={[lat, lng]} icon={defaultIcon}>
+          <Popup>{title}</Popup>
+        </Marker>
+      )}
     </MapContainer>
   );
 }
