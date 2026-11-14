@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useDocumentTitle } from '../utils/useDocumentTitle.js';
 import civicHeroImg from '../assets/civic-hero.jpg';
 import {
   IconUser,
@@ -19,8 +20,10 @@ import {
 } from '../components/Icons.jsx';
 
 export default function Landing() {
+  useDocumentTitle('Public Issue Reporting & Resolution Platform');
   const { user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Contact form state
   const [contactName, setContactName] = useState('');
@@ -29,6 +32,18 @@ export default function Landing() {
   const [contactMessage, setContactMessage] = useState('');
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactSending, setContactSending] = useState(false);
+  const [referenceId, setReferenceId] = useState('');
+
+  // Close mobile menu on scroll or resize
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth > 860) {
+        setMobileMenuOpen(false);
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -54,32 +69,45 @@ export default function Landing() {
     setTimeout(() => {
       setContactSending(false);
       setContactSubmitted(true);
-      setContactName('');
-      setContactEmail('');
-      setContactMessage('');
+      setReferenceId(`CF-${Math.floor(100000 + Math.random() * 900000)}`);
     }, 450);
   }
 
+  function handleResetContact() {
+    setContactSubmitted(false);
+    setContactName('');
+    setContactEmail('');
+    setContactMessage('');
+    setReferenceId('');
+  }
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="landing-shell-designed">
+    <div className="landing-shell-designed" style={{ overflowX: 'hidden', width: '100%' }}>
       {/* Background Atmosphere: Controlled Scrim */}
       <div className="landing-ambient-layer" />
 
       {/* Primary Top Header */}
       <header className="landing-header-clean">
         <div className="landing-header-inner">
-          <div className="brand-group">
+          {/* Clickable Logo */}
+          <Link to="/" onClick={scrollToTop} className="brand-group" title="CivicFix Home">
             <span className="brand-symbol" />
             <span className="brand-name">CivicFix</span>
             <span className="brand-version-badge">Operations 2.0</span>
-          </div>
+          </Link>
 
+          {/* Desktop Navigation Links */}
           <nav className="nav-menu">
             <a href="#how-it-works" className="nav-menu-link">How It Works</a>
             <a href="#about" className="nav-menu-link">Architecture</a>
             <a href="#contact" className="nav-menu-link">Municipal Contact</a>
           </nav>
 
+          {/* Desktop Actions */}
           <div className="nav-actions-group">
             {user && (
               <div className="session-status-badge">
@@ -107,7 +135,100 @@ export default function Landing() {
               <span>Admin Portal</span>
             </Link>
           </div>
+
+          {/* Mobile Hamburger Menu Toggle Button */}
+          <button
+            type="button"
+            className="landing-hamburger-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {mobileMenuOpen ? (
+                <path d="M18 6L6 18M6 6l12 12" />
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        {mobileMenuOpen && (
+          <div className="landing-mobile-menu">
+            <nav className="landing-mobile-nav">
+              <a
+                href="#how-it-works"
+                className="mobile-nav-link"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                How It Works
+              </a>
+              <a
+                href="#about"
+                className="mobile-nav-link"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Architecture
+              </a>
+              <a
+                href="#contact"
+                className="mobile-nav-link"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Municipal Contact
+              </a>
+            </nav>
+
+            <div className="landing-mobile-actions">
+              {user && (
+                <div className="mobile-session-info">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span className="status-indicator-dot" />
+                    <strong>{user.name}</strong>
+                    <span className="session-role-pill">{user.role}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="btn-link-action"
+                    style={{ marginTop: 6 }}
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+
+              <Link
+                to="/login?role=citizen"
+                className="btn-portal btn-citizen-primary"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ justifyContent: 'center' }}
+              >
+                <IconUser size={16} />
+                <span>Citizen Portal</span>
+              </Link>
+
+              <Link
+                to="/login?role=admin"
+                className="btn-portal btn-admin-primary"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ justifyContent: 'center' }}
+              >
+                <IconShield size={16} />
+                <span>Admin Console</span>
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section: Engineered for Clarity & Utility */}
@@ -127,7 +248,7 @@ export default function Landing() {
 
             <p className="hero-lead">
               CivicFix bridges municipal authorities and residents. Capture potholes,
-              damaged lighting, and sanitation hazards with auto-detected GPS location —
+              damaged lighting, and sanitation hazards with auto-detected GPS location &mdash;
               then monitor maintenance crews as repairs are dispatched and resolved in real time.
             </p>
           </div>
@@ -212,7 +333,7 @@ export default function Landing() {
               <IconCheckCircle size={18} className="cell-icon" />
               <div>
                 <strong>Auditable Progression</strong>
-                <span>Pending → In Progress → Resolved</span>
+                <span>Pending &rarr; In Progress &rarr; Resolved</span>
               </div>
             </div>
           </div>
@@ -241,12 +362,19 @@ export default function Landing() {
             <div
               className="window-canvas-wrapper"
               onClick={() => setIsModalOpen(true)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setIsModalOpen(true);
+              }}
               title="Click to view full-resolution city infrastructure overview"
             >
               <img
                 src={civicHeroImg}
                 alt="CivicFix operations overview showing citizen reporting and municipal road repair crews"
                 className="window-canvas-img"
+                loading="lazy"
+                decoding="async"
               />
               <div className="window-canvas-overlay-hint">
                 <span>View Full Resolution</span>
@@ -393,9 +521,15 @@ export default function Landing() {
                 <div>
                   <h4>Electronic Inquiries</h4>
                   <p>
-                    General Help Desk: <a href="mailto:support@civicfix.org">support@civicfix.org</a>
+                    General Help Desk:{' '}
+                    <a href="mailto:support@civicfix.org" className="contact-link" title="Send email to support@civicfix.org">
+                      support@civicfix.org
+                    </a>
                     <br />
-                    Authority Liaison: <a href="mailto:admin@civicfix.gov">admin@civicfix.gov</a>
+                    Authority Liaison:{' '}
+                    <a href="mailto:admin@civicfix.gov" className="contact-link" title="Send email to admin@civicfix.gov">
+                      admin@civicfix.gov
+                    </a>
                   </p>
                 </div>
               </div>
@@ -407,9 +541,11 @@ export default function Landing() {
                 <div>
                   <h4>Public Helpline</h4>
                   <p>
-                    <a href="tel:18002484234">1800-CIVIC-FIX (1800-248-4234)</a>
+                    <a href="tel:18002484234" className="contact-link" title="Call CivicFix Public Helpline">
+                      1800-CIVIC-FIX (1800-248-4234)
+                    </a>
                     <br />
-                    <span className="subtext">Operating Hours: Mon &ndash; Sat, 08:00 &ndash; 20:00</span>
+                    <span className="subtext">Operating Hours: Mon &ndash; Sat, 08:00 &ndash; 20:00 IST</span>
                   </p>
                 </div>
               </div>
@@ -420,7 +556,7 @@ export default function Landing() {
                 <div>
                   <strong>Critical Hazard Protocol</strong>
                   <p>
-                    For active life-threatening emergencies (e.g. fallen high-voltage cables, open gas mains, or structural collapse), contact emergency services (911 / 112) immediately.
+                    For active life-threatening emergencies (e.g. fallen high-voltage cables, open gas mains, or structural collapse), contact emergency services (112 / 100) immediately.
                   </p>
                 </div>
               </div>
@@ -434,9 +570,22 @@ export default function Landing() {
               {contactSubmitted ? (
                 <div className="submission-success-card">
                   <IconCheck size={20} className="success-icon-svg" />
-                  <div>
-                    <strong>Inquiry Received</strong>
-                    <p>Your communication has been dispatched to the municipal desk. Reference ID generated.</p>
+                  <div style={{ flex: 1 }}>
+                    <strong>Inquiry Received Successfully</strong>
+                    <p style={{ margin: '4px 0 8px 0' }}>
+                      Your communication has been dispatched to the municipal desk.
+                    </p>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--accent)', fontWeight: 700 }}>
+                      Tracking Reference: {referenceId}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleResetContact}
+                      className="btn btn-secondary"
+                      style={{ marginTop: 12, fontSize: '0.82rem', padding: '0.4rem 0.8rem' }}
+                    >
+                      Send Another Inquiry
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -447,7 +596,7 @@ export default function Landing() {
                       required
                       type="text"
                       className="text-input-clean"
-                      placeholder="e.g. Elena Rostova"
+                      placeholder="e.g. Ramesh Patil"
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                     />
@@ -459,7 +608,7 @@ export default function Landing() {
                       required
                       type="email"
                       className="text-input-clean"
-                      placeholder="e.g. elena@municipality.gov"
+                      placeholder="e.g. ramesh.patil@nashik.gov.in"
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
                     />
@@ -485,7 +634,7 @@ export default function Landing() {
                       required
                       rows={4}
                       className="textarea-input-clean"
-                      placeholder="Provide detailed description of the inquiry or requirement..."
+                      placeholder="Provide detailed description of the road defect, query, or civic requirement..."
                       value={contactMessage}
                       onChange={(e) => setContactMessage(e.target.value)}
                     />
@@ -509,10 +658,10 @@ export default function Landing() {
       <footer className="designed-footer">
         <div className="designed-footer-inner">
           <div className="footer-brand-col">
-            <div className="brand-group">
+            <Link to="/" onClick={scrollToTop} className="brand-group" title="CivicFix Home">
               <span className="brand-symbol" />
               <span className="brand-name">CivicFix</span>
-            </div>
+            </Link>
             <p className="footer-tagline">
               Civil infrastructure tracking & municipal field dispatch framework.
               Built for transparent public accountability.
@@ -540,15 +689,23 @@ export default function Landing() {
           <div className="footer-nav-col">
             <h4>Administration</h4>
             <ul>
-              <li><a href="mailto:support@civicfix.org">support@civicfix.org</a></li>
-              <li><a href="tel:18002484234">1800-CIVIC-FIX</a></li>
+              <li>
+                <a href="mailto:support@civicfix.org" className="contact-link">
+                  support@civicfix.org
+                </a>
+              </li>
+              <li>
+                <a href="tel:18002484234" className="contact-link">
+                  1800-CIVIC-FIX
+                </a>
+              </li>
               <li><span>Civic Center, Suite 400</span></li>
             </ul>
           </div>
         </div>
 
         <div className="designed-footer-bottom">
-          <span>&copy; {new Date().getFullYear()} CivicFix Municipal Platform. Open Public Operations.</span>
+          <span>&copy; {new Date().getFullYear()} CivicFix Municipal Platform. All rights reserved.</span>
           <span className="footer-compliance-text">Audited Municipal Framework &bull; Verified Dispatch</span>
         </div>
       </footer>
@@ -565,6 +722,7 @@ export default function Landing() {
             <div className="modal-lightbox-header">
               <span>Civic Infrastructure Overview &mdash; Real-Time Urban Resolution</span>
               <button
+                type="button"
                 className="btn-modal-close"
                 onClick={() => setIsModalOpen(false)}
                 aria-label="Close"
@@ -576,6 +734,8 @@ export default function Landing() {
               src={civicHeroImg}
               alt="CivicFix Fullscreen View"
               className="modal-lightbox-image"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import Layout, { TopNav } from '../components/Layout.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import { fetchIssues } from '../api/client.js';
+import { useDocumentTitle } from '../utils/useDocumentTitle.js';
 
 export default function CitizenDashboard() {
+  useDocumentTitle('Citizen Dashboard');
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,10 +34,10 @@ export default function CitizenDashboard() {
       ) : (
         <>
           {/* Hero summary card */}
-          <section className="card card-hero card-pad" style={{ marginBottom: '1.75rem', display: 'grid', gridTemplateColumns: 'minmax(0,2fr) minmax(0,1.4fr)', gap: 20, alignItems: 'center' }}>
+          <section className="card card-hero card-pad hero-dashboard-responsive" style={{ marginBottom: '1.75rem' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, letterSpacing: '-0.03em' }}>Thanks for fixing your city</h2>
-              <p style={{ marginTop: 8, color: 'var(--muted)', maxWidth: 420 }}>
+              <p style={{ marginTop: 8, color: 'var(--muted)', maxWidth: 460 }}>
                 Track every report you raise, see progress in real time, and help local authorities prioritise what matters most.
               </p>
 
@@ -54,9 +56,10 @@ export default function CitizenDashboard() {
                 </div>
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
+
+            <div className="dashboard-quick-actions">
               <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>Quick actions</p>
-              <div style={{ marginTop: 10, display: 'flex', justifyContent: 'flex-end', gap: 10, flexWrap: 'wrap' }}>
+              <div style={{ marginTop: 10, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <Link to="/report" className="btn btn-primary">
                   + Report new issue
                 </Link>
@@ -71,7 +74,7 @@ export default function CitizenDashboard() {
           <section
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
               gap: 14,
               marginBottom: '1.75rem',
             }}
@@ -101,33 +104,30 @@ export default function CitizenDashboard() {
               </div>
             </div>
 
-            <div className="insight-list">
-              <div className="card card-pad">
-                <h3 style={{ margin: 0, fontSize: '1rem' }}>Impact score</h3>
-                <p style={{ margin: '6px 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-                  Resolution efficiency based on your reported issues.
-                </p>
-                <div style={{ marginTop: 10, fontSize: '1.6rem', fontWeight: 900, color: 'var(--success)' }}>
-                  {resolutionRate}%
-                </div>
-                <div className="progress-track">
-                  <span style={{ width: `${resolutionRate}%` }} />
-                </div>
+            <div className="card card-pad">
+              <h2 style={{ fontSize: '1.1rem', marginTop: 0, marginBottom: 12 }}>Impact score</h2>
+              <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: 0 }}>
+                Resolution efficiency based on your reported issues.
+              </p>
+              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: 'var(--accent)', marginTop: 8 }}>
+                {resolutionRate}%
+              </div>
+              <div className="progress-track" style={{ marginTop: 8 }}>
+                <span style={{ width: `${resolutionRate}%` }} />
               </div>
 
-              <div className="insight-item">
-                <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.11em' }}>
-                  Current focus
-                </div>
-                <div style={{ marginTop: 4, fontWeight: 800 }}>{focusArea}</div>
+              <div style={{ marginTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 14 }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Current Focus</div>
+                <div style={{ fontWeight: 750, marginTop: 4 }}>{focusArea}</div>
               </div>
-              <div className="insight-item">
-                <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.11em' }}>
-                  Suggested action
-                </div>
-                <div style={{ marginTop: 4, fontWeight: 700 }}>
-                  {pending > 0 ? 'Add photos and exact map pin for pending issues.' : 'Great work! Keep reporting local improvements.'}
-                </div>
+
+              <div style={{ marginTop: 14 }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Suggested Action</div>
+                <p style={{ fontSize: '0.86rem', margin: '4px 0 0 0', color: 'var(--text)' }}>
+                  {pending > 0
+                    ? `You have ${pending} pending issue${pending > 1 ? 's' : ''} awaiting municipal triage.`
+                    : 'Great work! Keep reporting local improvements to help maintain city infrastructure.'}
+                </p>
               </div>
             </div>
           </section>
@@ -137,11 +137,13 @@ export default function CitizenDashboard() {
   );
 }
 
-function StatCard({ label, value, accent = 'var(--text)' }) {
+function StatCard({ label, value, accent }) {
   return (
-    <div className="card card-pad">
-      <div style={{ fontSize: '1.55rem', fontWeight: 900, color: accent }}>{value}</div>
-      <div style={{ fontSize: '0.85rem', color: 'var(--muted)', marginTop: 4 }}>{label}</div>
+    <div className="card card-pad" style={{ textAlign: 'center' }}>
+      <div style={{ fontSize: '1.85rem', fontWeight: 900, color: accent || 'var(--text)' }}>{value}</div>
+      <div style={{ fontSize: '0.82rem', color: 'var(--muted)', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {label}
+      </div>
     </div>
   );
 }

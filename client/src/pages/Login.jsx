@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { IconUser, IconShield, IconArrowRight, IconAlertTriangle } from '../components/Icons.jsx';
+import { useDocumentTitle } from '../utils/useDocumentTitle.js';
+import { IconUser, IconShield, IconAlertTriangle, IconCheck } from '../components/Icons.jsx';
 
 export default function Login() {
+  useDocumentTitle('Sign In');
   const { login, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,6 +17,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,6 +30,7 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     try {
@@ -40,27 +44,30 @@ export default function Login() {
         return;
       }
 
-      if (role === 'citizen' && userRole === 'admin') {
-        navigate('/admin', { replace: true });
-        return;
-      }
+      setSuccess('Authenticated successfully. Redirecting…');
 
-      const to = userRole === 'admin' ? '/admin' : '/dashboard';
-      navigate(location.state?.from?.pathname || to, { replace: true });
+      setTimeout(() => {
+        if (role === 'citizen' && userRole === 'admin') {
+          navigate('/admin', { replace: true });
+          return;
+        }
+
+        const to = userRole === 'admin' ? '/admin' : '/dashboard';
+        navigate(location.state?.from?.pathname || to, { replace: true });
+      }, 400);
     } catch (err) {
-      setError(err.response?.data?.message || 'Authentication failed. Please verify credentials.');
-    } finally {
+      setError(err.response?.data?.message || 'Authentication failed. Please check your credentials and try again.');
       setLoading(false);
     }
   }
 
   return (
     <div className="auth-shell">
-      <div className="auth-card card" style={{ maxWidth: 440 }}>
+      <div className="auth-card card" style={{ maxWidth: 460 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <Link to="/" style={{ color: 'var(--muted)', fontSize: '0.82rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Link to="/" style={{ color: 'var(--muted)', fontSize: '0.85rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
             <span>&larr;</span>
-            <span>Back to Platform</span>
+            <span>Back to Home</span>
           </Link>
           <span style={{ fontSize: '0.75rem', color: 'var(--muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
             CivicFix Identity
@@ -75,6 +82,7 @@ export default function Login() {
             onClick={() => {
               setRole('citizen');
               setError('');
+              setSuccess('');
             }}
           >
             <IconUser size={15} />
@@ -86,6 +94,7 @@ export default function Login() {
             onClick={() => {
               setRole('admin');
               setError('');
+              setSuccess('');
             }}
           >
             <IconShield size={15} />
@@ -118,9 +127,42 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {error && (
-            <div style={{ color: '#fca5a5', fontSize: '0.88rem', padding: '10px 12px', background: 'rgba(239, 68, 68, 0.12)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'flex-start', gap: 8 }} role="alert">
+            <div
+              style={{
+                color: '#fca5a5',
+                fontSize: '0.88rem',
+                padding: '10px 12px',
+                background: 'rgba(239, 68, 68, 0.12)',
+                borderRadius: '8px',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 8,
+              }}
+              role="alert"
+            >
               <IconAlertTriangle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>{error}</span>
+            </div>
+          )}
+
+          {success && (
+            <div
+              style={{
+                color: '#86efac',
+                fontSize: '0.88rem',
+                padding: '10px 12px',
+                background: 'rgba(34, 197, 94, 0.12)',
+                borderRadius: '8px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+              role="status"
+            >
+              <IconCheck size={16} style={{ flexShrink: 0 }} />
+              <span>{success}</span>
             </div>
           )}
 
@@ -133,7 +175,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              placeholder={role === 'admin' ? 'admin@municipality.gov' : 'resident@example.com'}
+              placeholder={role === 'admin' ? 'admin@civicfix.gov' : 'resident@nashik.gov.in'}
             />
           </label>
 
@@ -146,7 +188,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              placeholder="••••••••"
+              placeholder="Enter your account password"
             />
           </label>
 
@@ -160,7 +202,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.4rem', paddingTop: '1.2rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
+        <div style={{ marginTop: '1.4rem', paddingTop: '1.2rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem', flexWrap: 'wrap', gap: 8 }}>
           {role === 'citizen' ? (
             <p style={{ margin: 0 }}>
               Need an account? <Link to="/register?role=citizen" style={{ color: '#38bdf8' }}>Register as Citizen</Link>

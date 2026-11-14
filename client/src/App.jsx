@@ -9,6 +9,7 @@ import MyIssues from './pages/MyIssues.jsx';
 import ManageIssues from './pages/ManageIssues.jsx';
 import IssueDetails from './pages/IssueDetails.jsx';
 import Landing from './pages/Landing.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 function PrivateRoute({ children, adminOnly }) {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -71,32 +72,17 @@ export default function App() {
       />
       <Route
         path="/issue/:id"
-        element={
-          <IssueDetailsRoute />
-        }
+        element={<IssueDetailsRoute />}
       />
       <Route path="/" element={<Landing />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Custom 404 Route */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
 
-function HomeRedirect() {
-  const { isAuthenticated, isAdmin } = useAuth();
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-  return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
-}
-
-function LandingRoute() {
-  const { isAuthenticated, isAdmin } = useAuth();
-  if (isAuthenticated) {
-    return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
-  }
-  return <Landing />;
-}
-
 function IssueDetailsRoute() {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: { pathname: window.location.pathname } }} />;
   }
